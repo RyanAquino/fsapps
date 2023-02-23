@@ -11,7 +11,7 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the req
 pip install -r requirements.txt
 ```
 
-Scrapy is the module used on this project. More info can be found on this [Documentation|https://docs.scrapy.org/en/latest/intro/tutorial.html].
+Scrapy is the module used on this project. More info can be found on this [Documentation|https://docs.scrapy.org/en/latest/intro/tutorial.html] 
 
 ## Usage
 
