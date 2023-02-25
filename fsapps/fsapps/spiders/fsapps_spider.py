@@ -6,9 +6,9 @@ from scrapy.http import Request
 
 class FsappsSpider(scrapy.Spider):
     name = "fsapps"
-    year = 2023
+    year = 2015
     start_urls = [
-        f"https://fsapps.fiscal.treasury.gov/dts/issues/{year}" for year in range(1998, year+1)
+        f"https://fsapps.fiscal.treasury.gov/dts/issues/{year}" for year in range(2015, year+1)
     ]
 
     def __init__(self):
@@ -21,16 +21,35 @@ class FsappsSpider(scrapy.Spider):
         super().__init__()
 
     def parse(self, response):
+        mapping = {}
         for link in response.css("a::attr(href)"):
-            if ".pdf" in link.get():
-                yield Request(
-                    url=response.urljoin(link.get()),
-                    callback=self.save_pdf
-                ) 
+            link = link.get()
+
+            if ".txt" in link or "xlsx" in link or ".pdf" in link:
+                filename = link.split('/')[-1].split(".")[-2]
+
+                if not filename:
+                    self.logger.error(f"skipping: {link}")
+                    continue
+
+                if ".txt" in link:
+                    mapping[filename] = response.urljoin(link)
+
+                if ".xlsx" in link:
+                    mapping[filename] = response.urljoin(link)
+
+                if ".pdf" in link:
+                    mapping[filename] = response.urljoin(link)
+
+        for item in mapping.values():
+            yield Request(
+                url=item,
+                callback=self.save_pdf
+            )
 
     def save_pdf(self, response):
         filename = response.url.split('/')[-1]
-        self.logger.info('Saving PDF %s', filename)
+        self.logger.info(f'Saving: {filename}')
 
         with open(os.path.join(os.getcwd(), "data", filename), "wb") as f:
             f.write(response.body)
