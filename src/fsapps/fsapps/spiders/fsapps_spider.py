@@ -31,6 +31,14 @@ class FsappsSpider(scrapy.Spider):
         if not Path(self.download_directory_path).exists():
             os.makedirs(self.download_directory_path)
 
+    def is_file_downloaded(self, filename):
+        extensions = ["txt", "xlsx", "pdf"]
+        for ext in extensions:
+            temp_file_name = f"{filename}.{ext}"
+            if (Path(self.download_directory_path) / temp_file_name).exists():
+                return True
+        return False
+
     def parse(self, response, **kwargs):
         mapping = {}
         for link in response.css("a::attr(href)"):
@@ -40,8 +48,8 @@ class FsappsSpider(scrapy.Spider):
                 filename_ext = link.split('/')[-1]
                 filename = filename_ext.split(".")[-2]
 
-                if not filename or (Path(self.download_directory_path) / filename_ext).exists():
-                    self.logger.error(f"skipping: {link}")
+                if not filename or self.is_file_downloaded(filename):
+                    self.logger.warning(f"skipping: {link}")
                     continue
 
                 if ".txt" in link:
