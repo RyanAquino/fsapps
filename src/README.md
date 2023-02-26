@@ -25,3 +25,8 @@ Run the following command on the CLI
 ```python
 scrapy crawl fsapps
 ```
+
+Run with log file as output
+```python
+scrapy crawl fsapps --logfile=logs.log
+```

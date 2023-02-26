@@ -2,24 +2,34 @@ import scrapy
 import os
 
 from scrapy.http import Request
+from pathlib import Path
 
 
 class FsappsSpider(scrapy.Spider):
     name = "fsapps"
     start_year = 1998
     end_year = 2023
+    download_directory_path = Path().cwd() / "data"
     start_urls = [
         f"https://fsapps.fiscal.treasury.gov/dts/issues/{year}" for year in range(start_year, end_year+1)
     ]
 
     def __init__(self):
+        self.start_urls += self.generate_year_quarter_urls()
+        self.download_directory()
+        super().__init__()
+
+    def generate_year_quarter_urls(self):
         quarter_per_year = []
         for url in self.start_urls:
             for ctr in range(1, 5):
                 quarter_per_year.append(f"{url}/{ctr}")
 
-        self.start_urls += quarter_per_year
-        super().__init__()
+        return quarter_per_year
+
+    def download_directory(self):
+        if not Path(self.download_directory_path).exists():
+            os.makedirs(self.download_directory_path)
 
     def parse(self, response, **kwargs):
         mapping = {}
@@ -27,9 +37,10 @@ class FsappsSpider(scrapy.Spider):
             link = link.get()
 
             if ".txt" in link or "xlsx" in link or ".pdf" in link:
-                filename = link.split('/')[-1].split(".")[-2]
+                filename_ext = link.split('/')[-1]
+                filename = filename_ext.split(".")[-2]
 
-                if not filename:
+                if not filename or (Path(self.download_directory_path) / filename_ext).exists():
                     self.logger.error(f"skipping: {link}")
                     continue
 
@@ -52,5 +63,5 @@ class FsappsSpider(scrapy.Spider):
         filename = response.url.split('/')[-1]
         self.logger.info(f'Saving: {filename}')
 
-        with open(os.path.join(os.getcwd(), "data", filename), "wb") as f:
+        with open(os.path.join(self.download_directory_path, filename), "wb") as f:
             f.write(response.body)
