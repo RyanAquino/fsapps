@@ -11,6 +11,12 @@ Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the req
 pip install -r requirements.txt
 ```
 
+
+## Navigate to project
+```bash
+cd fsapps
+```
+
 Scrapy is the module used on this project. More info can be found on this [Documentation](https://docs.scrapy.org/en/latest/intro/tutorial.html).
 
 ## Usage
@@ -18,4 +24,4 @@ Scrapy is the module used on this project. More info can be found on this [Docum
 Run the following command on the CLI
 ```python
 scrapy crawl fsapps
-
+```

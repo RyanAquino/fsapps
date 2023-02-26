@@ -6,9 +6,10 @@ from scrapy.http import Request
 
 class FsappsSpider(scrapy.Spider):
     name = "fsapps"
-    year = 2015
+    start_year = 1998
+    end_year = 2023
     start_urls = [
-        f"https://fsapps.fiscal.treasury.gov/dts/issues/{year}" for year in range(2015, year+1)
+        f"https://fsapps.fiscal.treasury.gov/dts/issues/{year}" for year in range(start_year, end_year+1)
     ]
 
     def __init__(self):
