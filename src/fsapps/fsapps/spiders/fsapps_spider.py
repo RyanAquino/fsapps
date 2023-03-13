@@ -11,7 +11,7 @@ class FsappsSpider(scrapy.Spider):
     end_year = 2023
     download_directory_path = Path().cwd() / "data"
     start_urls = [
-        f"https://fsapps.fiscal.treasury.gov/dts/issues/{year}" for year in range(start_year, end_year+1)
+        f"https://fsapps.fiscal.treasury.gov/dts/issues/{year}" for year in range(start_year, end_year + 1)
     ]
 
     def __init__(self):
@@ -41,6 +41,7 @@ class FsappsSpider(scrapy.Spider):
 
     def parse(self, response, **kwargs):
         mapping = {}
+
         for link in response.css("a::attr(href)"):
             link = link.get()
 
@@ -52,13 +53,9 @@ class FsappsSpider(scrapy.Spider):
                     self.logger.warning(f"skipping: {link}")
                     continue
 
-                if ".txt" in link:
-                    mapping[filename] = response.urljoin(link)
-
-                if ".xlsx" in link:
-                    mapping[filename] = response.urljoin(link)
-
-                if ".pdf" in link:
+                # Order: xlsx, txt, pdf
+                if filename not in mapping:
+                    self.logger.info(f"Downloading: {link}")
                     mapping[filename] = response.urljoin(link)
 
         for item in mapping.values():
