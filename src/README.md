@@ -30,3 +30,26 @@ Run with log file as output
 ```python
 scrapy crawl fsapps --logfile=logs.log
 ```
+
+
+## Running parsers on scraped files
+### Navigate to fsapps package
+```bash
+cd fsapps
+```
+
+### Run parser for desired file type
+Text parser
+```python
+python text_parser.py
+```
+
+Excel parser
+```python
+python xlsx_parser.py
+```
+
+PDF Parser
+```python
+python pdf_parser.py
+```
