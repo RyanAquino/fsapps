@@ -48,7 +48,9 @@ def parse_excel(file):
         ):
             row_vals = [i.value for i in row]
             label = row_vals.pop(0)
-            table_data[table_name].append({label: row_vals})
+            row_vals = [val for val in row_vals if val is not None]
+            if row_vals:
+                table_data[table_name].append({label: row_vals})
 
     return table_data
 

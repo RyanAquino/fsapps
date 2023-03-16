@@ -17,10 +17,10 @@ def format_data(line):
 
     while i < len(line):
         if line[i].lstrip("-").isdigit() and label.strip(" ") != "":
-            formatted[label.strip(" ")].append(line[i])
+            formatted[label.strip(" ")].append(int(line[i]))
             ctr = 1
             while i + ctr < len(line) and line[i + ctr].lstrip("-").isdigit():
-                formatted[label.strip(" ")].append(line[i + ctr])
+                formatted[label.strip(" ")].append(int(line[i + ctr]))
                 ctr += 1
             i += ctr
             i -= 1
@@ -89,6 +89,9 @@ def text_parser(data):
     table_name = ""
     parsed_tables = []
 
+    is_table_v_new = False
+    new_table_v_idx = 0
+
     for i, line in enumerate(data.split("\n")):
         line = line.strip()
 
@@ -107,13 +110,18 @@ def text_parser(data):
 
         processed = format_data(line)
         if processed:
-            processed = table_v_data_handler(processed)
-            mapping[table_name].append(processed)
+
+            # Determine if table V new format
+            if 'Short-Term Cash Investments (Table V)' in processed:
+                is_table_v_new = True
+
+            processed, new_table_v_idx = table_v_data_handler(processed, is_table_v_new, new_table_v_idx)
+            mapping[table_name].append(dict(processed))
 
     return mapping
 
 
-def table_v_data_handler(processed):
+def table_v_data_handler(processed, is_table_v_new, new_table_v_idx):
     table_v_mappings = [
         "Tax and Loan Note Accounts",
         "Transfers from Federal Reserve Account",
@@ -121,31 +129,27 @@ def table_v_data_handler(processed):
         "Transfers to Federal Reserve Account"
     ]
     processed = deepcopy(processed)
-    table_v_idx = 0
-    new_table_v_idx = 1
-    is_table_v_new = False
 
     for key, item in list(processed.items()):
-
-        if key == 'Short-Term Cash Investments (Table V)':
-            is_table_v_new = True
-            continue
-
-        if key == "(Table V)":
-            if key == "Accounts (Table V)" and not is_table_v_new:
-                processed[f"{table_v_mappings[table_v_idx]} {key}"] = processed.pop(key)
-                table_v_idx += 1
-
+        if key == "(Table V)" or key == "Table V":
             if is_table_v_new:
+                new_table_v_idx += 1
                 processed[f"{table_v_mappings[new_table_v_idx]} {key}"] = processed.pop(key)
-                new_table_v_idx += 2
+            else:
+                processed[f"{table_v_mappings[new_table_v_idx]} {key}"] = processed.pop(key)
 
-    return processed
+            new_table_v_idx += 1
+
+        if (key == "Accounts (Table V)" or key == "Accounts Table V") and not is_table_v_new:
+            processed[f"{table_v_mappings[new_table_v_idx]} {key}"] = processed.pop(key)
+            new_table_v_idx += 1
+
+    return processed, new_table_v_idx
 
 
 def main():
     files_path = Path.cwd().parent / "data"
-    errors = []
+    files_with_exception = []
 
     for item in files_path.iterdir():
         if item.suffix == ".txt":
@@ -162,9 +166,9 @@ def main():
                 response = requests.get(url)
                 data = response.text
                 print(text_parser(data))
-                errors.append(item.name)
+                files_with_exception.append(item.name)
 
-    print(errors, len(errors))
+    print(files_with_exception, len(files_with_exception))
 
 
 if __name__ == "__main__":
