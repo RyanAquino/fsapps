@@ -12,6 +12,10 @@ BOT_NAME = "fsapps"
 SPIDER_MODULES = ["fsapps.spiders"]
 NEWSPIDER_MODULE = "fsapps.spiders"
 
+# Output log to file
+# LOG_STDOUT=True
+# LOG_FILE = 'D:\HEINRICH\Projects\Scrapy-app\fsapps\scrapy_log.txt'
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = "fsapps (+http://www.yourdomain.com)"
