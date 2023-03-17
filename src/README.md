@@ -38,6 +38,11 @@ scrapy crawl fsapps --logfile=logs.log
 cd fsapps
 ```
 
+### Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
 ### Run parser for desired file type
 Text parser
 ```python
