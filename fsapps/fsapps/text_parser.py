@@ -215,10 +215,16 @@ def main():
         finally:
             for key, val in result.items():
                 table = key
-
                 for i in val:
                     key = list(i.keys())[0]
-                    print(key, i[key])
+                    i[key].insert(0, key)
+                    i[key].insert(0, table)
+                    i[key].insert(0, item.name)
+                    fill = ['NULL'] * (8-len(i[key]))
+                    i[key].extend(fill)
+                    
+                    query = f"INSERT INTO data VALUES {tuple(i[key])}".replace("'NULL'", 'NULL')
+                    execute_query(connection, query)
 
     print(files_with_exception, len(files_with_exception))
 
