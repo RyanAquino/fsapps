@@ -6,8 +6,7 @@ from pathlib import Path
 from datetime import datetime
 from collections import defaultdict
 
-import mysql.connector
-from mysql.connector import Error
+from helper import insert_data
 
 
 def format_data(line):
@@ -155,48 +154,11 @@ def table_v_data_handler(processed, is_table_v_new, new_table_v_idx):
 
     return processed, new_table_v_idx
 
-def create_server_connection(host_name, user_name, user_password, db_name):
-    connection = None
-    try:
-        connection = mysql.connector.connect(
-            host=host_name,
-            user=user_name,
-            passwd=user_password,
-            database=db_name
-        )
-        print("MySQL Database connection successful")
-    except Error as err:
-        print(f"Error: '{err}'")
-
-    return connection
-
-def execute_query(connection, query):
-    cursor = connection.cursor()
-    try:
-        cursor.execute(query)
-        connection.commit()
-        print("Query successful")
-    except Error as err:
-        print(f"Error: '{err}'")
-
-def read_query(connection, query):
-    cursor = connection.cursor()
-    result = None
-    try:
-        cursor.execute(query)
-        result = cursor.fetchall()
-        return result
-    except Error as err:
-        print(f"Error: '{err}'")
-
 def main():
-    connection = create_server_connection("localhost", "root", "", "fsapps")
-    # print(read_query(connection, "SELECT * FROM `table i operating cash balance`"))
-
     files_path = (Path.cwd().parent / "data").glob("*.txt")
     files_with_exception = []
 
-    for item in list(files_path)[1:2]:
+    for item in list(files_path):
         print(f"Processing: {item.name}")
 
         try:
@@ -213,20 +175,9 @@ def main():
             files_with_exception.append(item.name)
             result = text_parser(data)
         finally:
-            for key, val in result.items():
-                table = key
-                for i in val:
-                    key = list(i.keys())[0]
-                    i[key].insert(0, key)
-                    i[key].insert(0, table)
-                    i[key].insert(0, item.name)
-                    fill = ['NULL'] * (8-len(i[key]))
-                    i[key].extend(fill)
-                    
-                    query = f"INSERT INTO data VALUES {tuple(i[key])}".replace("'NULL'", 'NULL')
-                    execute_query(connection, query)
+            print(item.name, insert_data(result, item.name))
 
-    print(files_with_exception, len(files_with_exception))
+    # print(files_with_exception, len(files_with_exception))
 
 
 if __name__ == "__main__":

@@ -2,6 +2,8 @@ from collections import defaultdict
 from pathlib import Path
 import openpyxl
 
+from helper import insert_data
+
 
 def get_table_coordinate(worksheet):
     first_occurrence = {}
@@ -56,13 +58,12 @@ def parse_excel(file):
 
 
 def main():
-    files_path = Path.cwd().parent / "data"
+    files_path = (Path.cwd().parent / "data").glob("*.xlsx")
 
-    for item in files_path.iterdir():
-        if item.suffix == ".xlsx":
-            print(f"Processing: {item.name}")
-            print(parse_excel(item))
-
+    for item in list(files_path):
+        print(f"Processing: {item.name}")
+        result = parse_excel(item)
+        print(item.name, insert_data(result, item.name))
 
 if __name__ == "__main__":
     main()

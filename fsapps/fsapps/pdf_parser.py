@@ -177,18 +177,18 @@ def transform_data(pdf_data):
 
 
 def main():
-    files_path = Path.cwd().parent / "data"
+    files_path = (Path.cwd().parent / "data").glob("*.pdf")
     no_edges = []
     exceptions = []
 
-    for item in files_path.iterdir():
-        if item.suffix == ".pdf":
-            try:
-                pdf_data, edges = pdf_parser(item)
-                no_edges += edges
-                print(transform_data(pdf_data))
-            except Exception as e:
-                exceptions.append({"item": item, "exc": str(e)})
+    for item in list(files_path):
+        try:
+            pdf_data, edges = pdf_parser(item)
+            no_edges += edges
+        except Exception as e:
+            exceptions.append({"item": item, "exc": str(e)})
+        finally:
+            print(transform_data(pdf_data))
 
     print("No edges: ", no_edges)
     print("Exceptions: ", exceptions)
