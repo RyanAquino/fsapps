@@ -1,6 +1,7 @@
 import re
 from pathlib import Path
-from fsapps.fsapps.text_parser import format_data, is_day, table_v_data_handler
+from text_parser import format_data, is_day, table_v_data_handler
+from helper import insert_data
 import wordninja
 
 import pdfplumber
@@ -188,10 +189,14 @@ def main():
         except Exception as e:
             exceptions.append({"item": item, "exc": str(e)})
         finally:
-            print(transform_data(pdf_data))
+            result = transform_data(pdf_data)
+            
+            print(item.name, insert_data(result, item.name))
 
-    print("No edges: ", no_edges)
-    print("Exceptions: ", exceptions)
+            
+
+    # print("No edges: ", no_edges)
+    # print("Exceptions: ", exceptions)
 
 
 if __name__ == "__main__":
