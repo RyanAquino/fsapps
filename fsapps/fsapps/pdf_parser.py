@@ -182,7 +182,7 @@ def main():
     no_edges = []
     exceptions = []
 
-    for item in list(files_path):
+    for item in files_path:
         try:
             pdf_data, edges = pdf_parser(item)
             no_edges += edges

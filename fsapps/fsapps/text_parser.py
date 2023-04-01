@@ -158,7 +158,7 @@ def main():
     files_path = (Path.cwd().parent / "data").glob("*.txt")
     files_with_exception = []
 
-    for item in list(files_path)[0:1]:
+    for item in files_path:
         print(f"Processing: {item.name}")
 
         try:

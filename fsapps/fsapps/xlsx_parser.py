@@ -60,7 +60,7 @@ def parse_excel(file):
 def main():
     files_path = (Path.cwd().parent / "data").glob("*.xlsx")
 
-    for item in list(files_path):
+    for item in files_path:
         print(f"Processing: {item.name}")
         result = parse_excel(item)
         print(item.name, insert_data(result, item.name))
