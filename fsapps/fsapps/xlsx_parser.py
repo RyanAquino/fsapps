@@ -63,7 +63,10 @@ def main():
     for item in files_path:
         print(f"Processing: {item.name}")
         result = parse_excel(item)
-        print(item.name, insert_data(result, item.name))
+
+        if result:
+            insert_data(result, item)
+
 
 if __name__ == "__main__":
     main()

@@ -9,6 +9,19 @@ from collections import defaultdict
 from helper import insert_data
 
 
+def is_number(n):
+    res = False
+
+    try:
+        res = int(n)
+        if res or res == 0:
+            res = True
+    except ValueError:
+        pass
+
+    return res
+
+
 def format_data(line):
     formatted = defaultdict(list)
     label = ""
@@ -18,10 +31,10 @@ def format_data(line):
     line = [i.strip() for i in line.split(" ") if i and i != ""]
 
     while i < len(line):
-        if line[i].lstrip("-").isdigit() and label.strip(" ") != "" and line[i] != '³':
+        if is_number(line[i].lstrip("-")) and label.strip(" ") != "" and line[i] != '³':
             formatted[label.strip(" ")].append(int(line[i]))
             ctr = 1
-            while i + ctr < len(line) and line[i + ctr].lstrip("-").isdigit():
+            while i + ctr < len(line) and is_number(line[i + ctr].lstrip("-")):
                 formatted[label.strip(" ")].append(int(line[i + ctr]))
                 ctr += 1
             i += ctr
@@ -154,9 +167,11 @@ def table_v_data_handler(processed, is_table_v_new, new_table_v_idx):
 
     return processed, new_table_v_idx
 
+
 def main():
     files_path = (Path.cwd().parent / "data").glob("*.txt")
     files_with_exception = []
+    sql_exceptions = []
 
     for item in files_path:
         print(f"Processing: {item.name}")
@@ -174,10 +189,13 @@ def main():
             data = response.text
             files_with_exception.append(item.name)
             result = text_parser(data)
-        finally:
-            print(item.name, insert_data(result, item.name))
 
-    # print(files_with_exception, len(files_with_exception))
+        if result:
+            sql_exceptions += insert_data(result, item)
+
+    print("Files with exception: ", files_with_exception)
+    print("SQL Exceptions: ", sql_exceptions)
+    print("Length: ", len(files_with_exception))
 
 
 if __name__ == "__main__":
