@@ -2,6 +2,8 @@ from sqlalchemy import create_engine, ForeignKey, Column, Integer, String
 from sqlalchemy.orm import DeclarativeBase, Session, relationship
 from sqlalchemy.exc import IntegrityError
 
+engine = create_engine("mysql+pymysql://root:@localhost/dts_tables",echo = False)
+
 class Base(DeclarativeBase):
     pass
 
@@ -11,6 +13,14 @@ class TableDef(Base):
     id = Column(Integer, primary_key = True)
     table_name = Column(String(200))
     table_nbr = Column(String(10))
+
+    def to_dict():
+        return {
+            "id": self.id,
+            "table_name": self.table_name,
+            "table_nbr": self.table_nbr,
+        }
+
 
 class OpCashBal(Base):
     __tablename__ = "opcashbal"
@@ -215,8 +225,16 @@ def insert(objects):
     except IntegrityError as err:
         pass
 
+def select(object):
+    result_set = None
+    with Session(engine) as session:
+        result_set = session.query(object)
 
-engine = create_engine("mysql+pymysql://root:@localhost/dts_tables",echo = False)
+    return result_set
+
+for opcashbal in select(OpCashBal):
+    print(opcashbal.tabledef.to_dict())
+
 
 
 Base.metadata.create_all(engine, checkfirst=True)
