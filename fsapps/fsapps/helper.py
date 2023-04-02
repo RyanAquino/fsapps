@@ -31,13 +31,13 @@ def create_objects(table_info, data):
                         open_today_bal=i[account][1],
                         open_month_bal=i[account][2],
                         open_fiscal_year_bal=i[account][3],
-                        table_nbr=table_info[0],
                         record_fiscal_year = "",
                         record_fiscal_quarter = "",
                         record_calendar_year = "",
                         record_calendar_quarter = "",
                         record_calendar_month = "",
                         record_calendar_day = "",
+                        table_id = 1
                     )
                 )
 
@@ -51,13 +51,13 @@ def create_objects(table_info, data):
                         transaction_today_amt = i[account][0],
                         transaction_mtd_amt = i[account][1],
                         transaction_fytd_amt = i[account][2],
-                        table_nbr = table_info[0],
                         record_fiscal_year = "",
                         record_fiscal_quarter = "",
                         record_calendar_year = "",
                         record_calendar_quarter = "",
                         record_calendar_month = "",
                         record_calendar_day = "",
+                        table_id = 2
                     )
                 )
 
@@ -71,13 +71,13 @@ def create_objects(table_info, data):
                         transaction_today_amt = i[account][0],
                         transaction_mtd_amt = i[account][1],
                         transaction_fytd_amt = i[account][2],
-                        table_nbr = table_info[0],
                         record_fiscal_year = "",
                         record_fiscal_quarter = "",
                         record_calendar_year = "",
                         record_calendar_quarter = "",
                         record_calendar_month = "",
                         record_calendar_day = "",
+                        table_id = 3
                     )
                 )
 
@@ -90,7 +90,6 @@ def create_objects(table_info, data):
                         adj_today_amt = i[account][0],
                         adj_mtd_amt = i[account][1],
                         adj_fytd_amt = i[account][2],
-                        table_nbr = table_info[0],
                         sub_table_name = "",
                         record_fiscal_year = "",
                         record_fiscal_quarter = "",
@@ -98,6 +97,7 @@ def create_objects(table_info, data):
                         record_calendar_quarter = "",
                         record_calendar_month = "",
                         record_calendar_day = "",
+                        table_id = 4
                     )
                 )
             
@@ -110,7 +110,6 @@ def create_objects(table_info, data):
                         open_today_bal = i[account][1],
                         open_month_bal = i[account][2],
                         open_fiscal_year_bal = i[account][3],
-                        table_nbr = table_info[0],
                         sub_table_name = "",
                         record_fiscal_year = "",
                         record_fiscal_quarter = "",
@@ -118,6 +117,7 @@ def create_objects(table_info, data):
                         record_calendar_quarter = "",
                         record_calendar_month = "",
                         record_calendar_day = "",
+                        table_id = 5
                     )
                 )
 
@@ -129,7 +129,6 @@ def create_objects(table_info, data):
                         tax_deposit_today_amt = i[account][0],
                         tax_deposit_mtd_amt = i[account][1],
                         tax_deposit_fytd_amt = i[account][2],
-                        table_nbr = table_info[0],
                         sub_table_name = "",
                         record_fiscal_year = "",
                         record_fiscal_quarter = "",
@@ -137,6 +136,7 @@ def create_objects(table_info, data):
                         record_calendar_quarter = "",
                         record_calendar_month = "",
                         record_calendar_day = "",
+                        table_id = 6
                     )
                 )
 
@@ -149,7 +149,6 @@ def create_objects(table_info, data):
                         depositary_type_b_amt = i[account][1], 
                         depositary_type_c_amt = i[account][2],
                         total_amt = i[account][3],
-                        table_nbr = table_info[0],
                         sub_table_name = "",
                         record_fiscal_year = "",
                         record_fiscal_quarter = "",
@@ -157,6 +156,26 @@ def create_objects(table_info, data):
                         record_calendar_quarter = "",
                         record_calendar_month = "",
                         record_calendar_day = "",
+                        table_id = 7
+                    )
+                )
+            if "Short Term Cash Investments".startswith(table_info[1]):
+                objects.append(
+                    StCashInvest(
+                        transaction_type = "",
+                        transaction_type_desc = account,
+                        depositary_type_a_amt = i[account][0],
+                        depositary_type_b_amt = i[account][1], 
+                        depositary_type_c_amt = i[account][2],
+                        total_amt = i[account][3],
+                        sub_table_name = "",
+                        record_fiscal_year = "",
+                        record_fiscal_quarter = "",
+                        record_calendar_year = "",
+                        record_calendar_quarter = "",
+                        record_calendar_month = "",
+                        record_calendar_day = "",
+                        table_id = 8
                     )
                 )
 
@@ -168,7 +187,6 @@ def create_objects(table_info, data):
                         tax_refund_today_amt = i[account][0],
                         tax_refund_mtd_amt = i[account][1],
                         tax_refund_fytd_amt = i[account][2],
-                        table_nbr = table_info[0],
                         sub_table_name = "",
                         record_fiscal_year = "",
                         record_fiscal_quarter = "",
@@ -176,6 +194,7 @@ def create_objects(table_info, data):
                         record_calendar_quarter = "",
                         record_calendar_month = "",
                         record_calendar_day = "",
+                        table_id = 9
                     )
                 )
         except IndexError as err:
