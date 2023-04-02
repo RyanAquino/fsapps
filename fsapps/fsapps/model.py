@@ -6,7 +6,6 @@ engine = create_engine("mysql+pymysql://root:@localhost/dts_tables",echo = False
 
 Base = declarative_base()
 
-
 class TableDef(Base):
     __tablename__ = "tabledef"
 
@@ -233,8 +232,8 @@ def select(object):
 
     return result_set
 
-for opcashbal in select(OpCashBal):
-    print(opcashbal.tabledef.table_name)
+# for opcashbal in select(OpCashBal):
+#     print(opcashbal.tabledef.table_name)
 
 
 Base.metadata.create_all(engine, checkfirst=True)
