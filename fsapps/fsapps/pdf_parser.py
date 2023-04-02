@@ -42,7 +42,8 @@ def flatten_data(pdf_data):
             continue
 
         if item is not None and item != "":
-            item = re.sub(r"[\$,]", "", item)
+            item = re.sub(r"[\,]", "", item)
+            item = re.sub(r"[\$]", " ", item)
             item = item.replace(".", "").strip()
             item = wordninja.split(item)
             item = " ".join(item)
@@ -181,22 +182,24 @@ def main():
     files_path = (Path.cwd().parent / "data").glob("*.pdf")
     no_edges = []
     exceptions = []
+    sql_exceptions = []
 
     for item in files_path:
+        pdf_data = None
+
         try:
             pdf_data, edges = pdf_parser(item)
             no_edges += edges
         except Exception as e:
             exceptions.append({"item": item, "exc": str(e)})
-        finally:
+
+        if pdf_data:
             result = transform_data(pdf_data)
-            
-            print(item.name, insert_data(result, item.name))
+            sql_exceptions += insert_data(result, item)
 
-            
-
-    # print("No edges: ", no_edges)
-    # print("Exceptions: ", exceptions)
+    print("No edges: ", no_edges)
+    print("Exceptions: ", exceptions)
+    print("SQL Exceptions: ", sql_exceptions)
 
 
 if __name__ == "__main__":
