@@ -31,7 +31,9 @@ def handle_text_parser_special_case(account, i):
     for key in list(i.keys())[1:]:
         is_divided = len(key) == 2
         is_divided_twice = len(key) == 4
-        if (is_divided and re.findall(r"^\d\/", key)) or (is_divided_twice and re.findall(r"\d/\d/", key)):
+        if (is_divided and re.findall(r"^\d\/", key)) or (
+            is_divided_twice and re.findall(r"\d/\d/", key)
+        ):
             is_valid.append(True)
         else:
             is_valid.append(False)
@@ -42,11 +44,30 @@ def handle_text_parser_special_case(account, i):
     return new_data
 
 
+def compute_quarter(file_month):
+    quarter_mapping = {
+        1: [1, 2, 3],
+        2: [4, 5, 6],
+        3: [7, 8, 9],
+        4: [10, 11, 12],
+    }
+    computed_quarter = None
+
+    for quarter, key_months in quarter_mapping.items():
+        if file_month in key_months:
+            computed_quarter = quarter
+            break
+
+    return computed_quarter
+
+
 def create_objects(table_info, data, source):
     objects = []
     exceptions = []
     file_date = datetime.strptime(source.stem[:6], "%y%m%d")
+    file_year, file_month, file_day = file_date.year, file_date.month, file_date.day
     file_date = file_date.strftime("%Y-%m-%d")
+    file_quarter = compute_quarter(file_month)
 
     for i in data:
         account = list(i.keys())[0]
@@ -87,10 +108,10 @@ def create_objects(table_info, data, source):
                         open_fiscal_year_bal=open_year,
                         record_fiscal_year="",
                         record_fiscal_quarter="",
-                        record_calendar_year="",
-                        record_calendar_quarter="",
-                        record_calendar_month="",
-                        record_calendar_day="",
+                        record_calendar_year=file_year,
+                        record_calendar_quarter=file_quarter,
+                        record_calendar_month=file_month,
+                        record_calendar_day=file_day,
                         table_id=1,
                     )
                 )
@@ -107,10 +128,10 @@ def create_objects(table_info, data, source):
                         transaction_fytd_amt=i[account][2],
                         record_fiscal_year="",
                         record_fiscal_quarter="",
-                        record_calendar_year="",
-                        record_calendar_quarter="",
-                        record_calendar_month="",
-                        record_calendar_day="",
+                        record_calendar_year=file_year,
+                        record_calendar_quarter=file_quarter,
+                        record_calendar_month=file_month,
+                        record_calendar_day=file_day,
                         table_id=2,
                     )
                 )
@@ -127,10 +148,10 @@ def create_objects(table_info, data, source):
                         transaction_fytd_amt=i[account][2],
                         record_fiscal_year="",
                         record_fiscal_quarter="",
-                        record_calendar_year="",
-                        record_calendar_quarter="",
-                        record_calendar_month="",
-                        record_calendar_day="",
+                        record_calendar_year=file_year,
+                        record_calendar_quarter=file_quarter,
+                        record_calendar_month=file_month,
+                        record_calendar_day=file_day,
                         table_id=3,
                     )
                 )
@@ -149,10 +170,10 @@ def create_objects(table_info, data, source):
                         sub_table_name="",
                         record_fiscal_year="",
                         record_fiscal_quarter="",
-                        record_calendar_year="",
-                        record_calendar_quarter="",
-                        record_calendar_month="",
-                        record_calendar_day="",
+                        record_calendar_year=file_year,
+                        record_calendar_quarter=file_quarter,
+                        record_calendar_month=file_month,
+                        record_calendar_day=file_day,
                         table_id=4,
                     )
                 )
@@ -177,10 +198,10 @@ def create_objects(table_info, data, source):
                         sub_table_name="",
                         record_fiscal_year="",
                         record_fiscal_quarter="",
-                        record_calendar_year="",
-                        record_calendar_quarter="",
-                        record_calendar_month="",
-                        record_calendar_day="",
+                        record_calendar_year=file_year,
+                        record_calendar_quarter=file_quarter,
+                        record_calendar_month=file_month,
+                        record_calendar_day=file_day,
                         table_id=5,
                     )
                 )
@@ -196,10 +217,10 @@ def create_objects(table_info, data, source):
                         sub_table_name="",
                         record_fiscal_year="",
                         record_fiscal_quarter="",
-                        record_calendar_year="",
-                        record_calendar_quarter="",
-                        record_calendar_month="",
-                        record_calendar_day="",
+                        record_calendar_year=file_year,
+                        record_calendar_quarter=file_quarter,
+                        record_calendar_month=file_month,
+                        record_calendar_day=file_day,
                         table_id=6,
                     )
                 )
@@ -219,10 +240,10 @@ def create_objects(table_info, data, source):
                         sub_table_name="",
                         record_fiscal_year="",
                         record_fiscal_quarter="",
-                        record_calendar_year="",
-                        record_calendar_quarter="",
-                        record_calendar_month="",
-                        record_calendar_day="",
+                        record_calendar_year=file_year,
+                        record_calendar_quarter=file_quarter,
+                        record_calendar_month=file_month,
+                        record_calendar_day=file_day,
                         table_id=7,
                     )
                 )
@@ -239,10 +260,10 @@ def create_objects(table_info, data, source):
                         sub_table_name="",
                         record_fiscal_year="",
                         record_fiscal_quarter="",
-                        record_calendar_year="",
-                        record_calendar_quarter="",
-                        record_calendar_month="",
-                        record_calendar_day="",
+                        record_calendar_year=file_year,
+                        record_calendar_quarter=file_quarter,
+                        record_calendar_month=file_month,
+                        record_calendar_day=file_day,
                         table_id=8,
                     )
                 )
@@ -258,16 +279,18 @@ def create_objects(table_info, data, source):
                         sub_table_name="",
                         record_fiscal_year="",
                         record_fiscal_quarter="",
-                        record_calendar_year="",
-                        record_calendar_quarter="",
-                        record_calendar_month="",
-                        record_calendar_day="",
+                        record_calendar_year=file_year,
+                        record_calendar_quarter=file_quarter,
+                        record_calendar_month=file_month,
+                        record_calendar_day=file_day,
                         table_id=9,
                     )
                 )
         except IndexError:
             print({"table": table_info, "data": i[account], "file": source.name})
-            exceptions.append({"table": table_info, "data": i[account], "file": source.name})
+            exceptions.append(
+                {"table": table_info, "data": i[account], "file": source.name}
+            )
 
     return objects, exceptions
 
@@ -279,6 +302,6 @@ def insert_data(result, source):
         table_info = normalize_table_data(key)
 
         objects, exceptions = create_objects(table_info, val, source)
-        # insert(objects)
+        insert(objects)
 
     return exceptions
