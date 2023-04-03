@@ -57,7 +57,7 @@ def compute_quarter(file_month):
         9: 3,
         10: 4,
         11: 4,
-        12: 4
+        12: 4,
     }
 
     return quarter_mapping.get(file_month)

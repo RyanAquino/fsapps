@@ -2,9 +2,10 @@ from sqlalchemy import create_engine, ForeignKey, Column, Integer, String
 from sqlalchemy.orm import Session, relationship, declarative_base
 from sqlalchemy.exc import IntegrityError
 
-engine = create_engine("mysql+pymysql://root:@localhost/dts_tables",echo = False)
+engine = create_engine("sqlite:///fsapps.db", echo=False)
 
 Base = declarative_base()
+
 
 class TableDef(Base):
     __tablename__ = "tabledef"
@@ -12,6 +13,7 @@ class TableDef(Base):
     id = Column(Integer, primary_key=True)
     table_name = Column(String(200))
     table_nbr = Column(String(10))
+
 
 class OpCashBal(Base):
     __tablename__ = "opcashbal"
@@ -225,15 +227,12 @@ def insert(objects):
     except IntegrityError as err:
         pass
 
+
 def select(object):
-    result_set = None
     with Session(engine) as session:
         result_set = session.query(object)
 
     return result_set
-
-# for opcashbal in select(OpCashBal):
-#     print(opcashbal.tabledef.table_name)
 
 
 Base.metadata.create_all(engine, checkfirst=True)
