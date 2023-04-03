@@ -6,6 +6,21 @@ from pathlib import Path
 from datetime import datetime
 from collections import defaultdict
 
+from helper import insert_data
+
+
+def is_number(n):
+    res = False
+
+    try:
+        res = int(n)
+        if res or res == 0:
+            res = True
+    except ValueError:
+        pass
+
+    return res
+
 
 def format_data(line):
     formatted = defaultdict(list)
@@ -16,10 +31,10 @@ def format_data(line):
     line = [i.strip() for i in line.split(" ") if i and i != ""]
 
     while i < len(line):
-        if line[i].lstrip("-").isdigit() and label.strip(" ") != "":
+        if is_number(line[i].lstrip("-")) and label.strip(" ") != "" and line[i] != '³':
             formatted[label.strip(" ")].append(int(line[i]))
             ctr = 1
-            while i + ctr < len(line) and line[i + ctr].lstrip("-").isdigit():
+            while i + ctr < len(line) and is_number(line[i + ctr].lstrip("-")):
                 formatted[label.strip(" ")].append(int(line[i + ctr]))
                 ctr += 1
             i += ctr
@@ -96,8 +111,14 @@ def text_parser(data):
         line = line.strip()
 
         if "TABLE" in line and is_table(line, tbl_idx):
-            print(f"TABLE: {line.strip()}")
-            table_name = line.replace("|", "").strip()
+            # print(f"TABLE: {line.strip().replace('³', '')}")
+
+            # Remove unecessary characters
+            table_name = line.replace("|", "").replace("³", "")
+
+            # Replace multiple space with a single space
+            table_name = ' '.join(table_name.split())
+
             mapping[table_name] = []
             parsed_tables.append(table_name)
             if parsed_tables and "III-B" in parsed_tables[-1]:
@@ -148,27 +169,33 @@ def table_v_data_handler(processed, is_table_v_new, new_table_v_idx):
 
 
 def main():
-    files_path = Path.cwd().parent / "data"
+    files_path = (Path.cwd().parent / "data").glob("*.txt")
     files_with_exception = []
+    sql_exceptions = []
 
-    for item in files_path.iterdir():
-        if item.suffix == ".txt":
-            print(f"Processing: {item.name}")
+    for item in files_path:
+        print(f"Processing: {item.name}")
 
-            try:
-                with open(item) as f:
-                    data = f.read()
-                    print(text_parser(data))
-            except UnicodeDecodeError:
-                # Handle corrupted text files
-                url = f"https://fsapps.fiscal.treasury.gov/dts/files/{item.name}"
-                print(f"Sending request to : {url}")
-                response = requests.get(url)
-                data = response.text
-                print(text_parser(data))
-                files_with_exception.append(item.name)
+        try:
+            with open(item) as f:
+                data = f.read()
+                result = text_parser(data)
 
-    print(files_with_exception, len(files_with_exception))
+        except UnicodeDecodeError:
+            # Handle corrupted text files
+            url = f"https://fsapps.fiscal.treasury.gov/dts/files/{item.name}"
+            print(f"Sending request to : {url}")
+            response = requests.get(url)
+            data = response.text
+            files_with_exception.append(item.name)
+            result = text_parser(data)
+
+        if result:
+            sql_exceptions += insert_data(result, item)
+
+    print("Files with exception: ", files_with_exception)
+    print("SQL Exceptions: ", sql_exceptions)
+    print("Length: ", len(files_with_exception))
 
 
 if __name__ == "__main__":
