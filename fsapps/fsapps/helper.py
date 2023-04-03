@@ -46,19 +46,21 @@ def handle_text_parser_special_case(account, i):
 
 def compute_quarter(file_month):
     quarter_mapping = {
-        1: [1, 2, 3],
-        2: [4, 5, 6],
-        3: [7, 8, 9],
-        4: [10, 11, 12],
+        1: 1,
+        2: 1,
+        3: 1,
+        4: 2,
+        5: 2,
+        6: 2,
+        7: 3,
+        8: 3,
+        9: 3,
+        10: 4,
+        11: 4,
+        12: 4
     }
-    computed_quarter = None
 
-    for quarter, key_months in quarter_mapping.items():
-        if file_month in key_months:
-            computed_quarter = quarter
-            break
-
-    return computed_quarter
+    return quarter_mapping.get(file_month)
 
 
 def create_objects(table_info, data, source):
