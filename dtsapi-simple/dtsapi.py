@@ -2,6 +2,9 @@ import requests
 from dts_models import *
 from sqlalchemy.orm import sessionmaker
 
+import schedule
+import time
+
 Session = sessionmaker(bind=engine)
 
 def get_data_per_date(table, date):
@@ -53,7 +56,7 @@ def get_first_record_date(table):
     result = requests.get(api).json()['data']
     return result[0]['record_date'] if len(result) == 1 else None
 
-def main():
+def job():
     dts_tables = [
         "DTS_Table_1",
         "DTS_Table_2",
@@ -77,6 +80,29 @@ def main():
         else:
             print(f"Skipping!! data exists for date {record_date} on {table.lower()}.")
             continue
+
+
+def main():
+
+    # 1. run everyday 4pm except weekends
+    # 2. retrieve the latest data(same day & one day only) from their API
+    # 3. Save to SQLite database
+    t = "16:00"
+
+    schedule.every().monday.at(t).do(job)
+    schedule.every().tuesday.at(t).do(job)
+    schedule.every().wednesday.at(t).do(job)
+    schedule.every().thursday.at(t).do(job)
+    schedule.every().friday.at(t).do(job)
+
+    while True:
+        next_run = schedule.idle_seconds()
+        print(f"Time till next run {time.strftime('%H:%M:%S', time.gmtime(next_run))}.")
+
+        if next_run > 0:
+            time.sleep(next_run)
+
+        schedule.run_pending()
 
 if __name__ == "__main__":
     main()
