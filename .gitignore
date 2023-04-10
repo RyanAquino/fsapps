@@ -141,3 +141,6 @@ dmypy.json
 # Customs
 .idea/
 .DS_Store
+
+# Database files
+*.db
