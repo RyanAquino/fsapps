@@ -3,6 +3,7 @@ import time
 
 import requests
 import schedule
+from sqlalchemy.orm import Session, sessionmaker
 from dts_models import (
     Base,
     DTS_Table_1,
@@ -15,7 +16,6 @@ from dts_models import (
     DTS_Table_6,
     init_db,
 )
-from sqlalchemy.orm import Session, sessionmaker
 
 
 def get_data_per_date(table: str, date: str):
