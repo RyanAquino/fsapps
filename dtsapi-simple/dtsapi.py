@@ -33,7 +33,7 @@ def get_data_per_date(table: str, date: str, date_orig=None, results=None):
 
     base_url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service"
     endpoint = f"v1/accounting/dts/{table}"
-    param = f"filter=record_date:gte:{date}"
+    param = f"filter=record_date:eq:{date}"
     print(f"Sending request: {base_url}/{endpoint}?{param}")
     response = requests.get(f"{base_url}/{endpoint}?{param}", timeout=60).json()
 
@@ -133,7 +133,9 @@ def job(session: Session):
             print(f"Skipping!! data exists for date {record_date} on {table_lowered}.")
             continue
 
-        data_table = get_data_per_date(table_lowered, record_date)
+        data_table = get_data_per_date(
+            table_lowered, record_date + "&page%5Bsize%5D=10000"
+        )
         data_objs = []
 
         # Map tables / special case for table data not in requested table API
