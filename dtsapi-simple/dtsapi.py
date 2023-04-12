@@ -18,10 +18,12 @@ from dts_models import (
 from sqlalchemy.orm import Session, sessionmaker
 
 
-def get_data_per_date(table: str, date: str, results=None):
+def get_data_per_date(table: str, date: str, date_orig=None, results=None):
     """
     Recursively retrieve data per date and table on DTS API.
 
+    :param results:
+    :param date_orig: date original
     :param table: table name
     :param date: date to be retrieved
     :return: all results
@@ -31,7 +33,7 @@ def get_data_per_date(table: str, date: str, results=None):
 
     base_url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service"
     endpoint = f"v1/accounting/dts/{table}"
-    param = f"filter=record_date:eq:{date}"
+    param = f"filter=record_date:gte:{date}"
     print(f"Sending request: {base_url}/{endpoint}?{param}")
     response = requests.get(f"{base_url}/{endpoint}?{param}", timeout=60).json()
 
@@ -40,7 +42,10 @@ def get_data_per_date(table: str, date: str, results=None):
     if response.get("meta").get("count") > 1 and (
         nxt := response.get("links").get("next")
     ):
-        return get_data_per_date(table, date + nxt, results)
+        if not date_orig:
+            date_orig = date
+
+        return get_data_per_date(table, date_orig + nxt, date_orig, results)
     return results
 
 
@@ -114,11 +119,11 @@ def job(session: Session):
         "V": DTS_Table_5,
         "VI": DTS_Table_6,
     }
-    record_date = get_first_record_date("dts_table_1")
 
     for table_obj in dts_tables.values():
         table_name = table_obj.__name__
         table_lowered = table_name.lower()
+        record_date = get_first_record_date(table_lowered)
         exists = check_date_exists(table_obj, record_date, session)
         table_v_exists = table_lowered == "dts_table_6" and check_date_exists(
             DTS_Table_5, record_date, session
