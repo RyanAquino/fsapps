@@ -18,25 +18,35 @@ from dts_models import (
 from sqlalchemy.orm import Session, sessionmaker
 
 
-def get_data_per_date(table: str, date: str):
+def get_data_per_date(table: str, date: str, date_orig=None, results=None):
     """
-    Retrieve data per date on DTS API.
+    Recursively retrieve data per date and table on DTS API.
 
+    :param results:
+    :param date_orig: date original
     :param table: table name
     :param date: date to be retrieved
-    :return: yielded data
+    :return: all results
     """
+    if not results:
+        results = []
+
     base_url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service"
     endpoint = f"v1/accounting/dts/{table}"
     param = f"filter=record_date:eq:{date}"
+    print(f"Sending request: {base_url}/{endpoint}?{param}")
+    response = requests.get(f"{base_url}/{endpoint}?{param}", timeout=60).json()
 
-    result = requests.get(f"{base_url}/{endpoint}?{param}", timeout=60).json()
+    results += response.get("data")
 
-    for data in result["data"]:
-        yield data
+    if response.get("meta").get("count") > 1 and (
+        nxt := response.get("links").get("next")
+    ):
+        if not date_orig:
+            date_orig = date
 
-    if result["meta"]["total-pages"] > 1:
-        get_data_per_date(table, date + result["links"]["next"])
+        return get_data_per_date(table, date_orig + nxt, date_orig, results)
+    return results
 
 
 def insert(data_obj_list: list, session: Session):
@@ -99,34 +109,42 @@ def job(session: Session):
     :param session: Session object
     :return: None
     """
-    dts_tables = [
-        DTS_Table_1,
-        DTS_Table_2,
-        DTS_Table_3a,
-        DTS_Table_3b,
-        DTS_Table_3c,
-        DTS_Table_4,
-        DTS_Table_5,
-        DTS_Table_6,
-    ]
+    dts_tables = {
+        "I": DTS_Table_1,
+        "II": DTS_Table_2,
+        "IIIA": DTS_Table_3a,
+        "IIIB": DTS_Table_3b,
+        "IIIC": DTS_Table_3c,
+        "IV": DTS_Table_4,
+        "V": DTS_Table_5,
+        "VI": DTS_Table_6,
+    }
 
-    for table_obj in dts_tables:
+    for table_obj in dts_tables.values():
         table_name = table_obj.__name__
         table_lowered = table_name.lower()
         record_date = get_first_record_date(table_lowered)
         exists = check_date_exists(table_obj, record_date, session)
+        table_v_exists = table_lowered == "dts_table_6" and check_date_exists(
+            DTS_Table_5, record_date, session
+        )
 
-        if not exists:
-            data_obj_list = [
-                table_obj(**item)
-                for item in get_data_per_date(table_lowered, record_date)
-            ]
-
-            print(f"Inserting {table_name} to database for date {record_date}.")
-            insert(data_obj_list, session)
-        else:
+        if exists or table_v_exists:
             print(f"Skipping!! data exists for date {record_date} on {table_lowered}.")
             continue
+
+        data_table = get_data_per_date(
+            table_lowered, record_date + "&page%5Bsize%5D=10000"
+        )
+        data_objs = []
+
+        # Map tables / special case for table data not in requested table API
+        for item in data_table:
+            table_model = dts_tables[item.get("table_nbr").replace("-", "")]
+            data_objs.append(table_model(**item))
+
+        print(f"Inserting {table_name} to database for date {record_date}.")
+        insert(data_objs, session)
 
 
 def main(session: Session):

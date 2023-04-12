@@ -62,6 +62,7 @@ class DTS_Table_3a(Base):
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
     transaction_type = Column(String(200), nullable=True)
+    account_type = Column(String(200), nullable=True)
     security_market = Column(String(200), nullable=True)
     security_type = Column(String(200), nullable=True)
     security_type_desc = Column(String(200), nullable=True)
@@ -86,6 +87,8 @@ class DTS_Table_3b(Base):
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
+    security_market = Column(String(200), nullable=True)
+    account_type = Column(String(200), nullable=True)
     transaction_type = Column(String(200), nullable=True)
     adj_type = Column(String(200), nullable=True)
     adj_type_desc = Column(String(200), nullable=True)
@@ -111,6 +114,8 @@ class DTS_Table_3c(Base):
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
+    account_type = Column(String(200), nullable=True)
+    transaction_type = Column(String(200), nullable=True)
     debt_catg = Column(String(200), nullable=True)
     debt_catg_desc = Column(String(200), nullable=True)
     close_today_bal = Column(String(200), nullable=True)
