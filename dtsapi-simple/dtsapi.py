@@ -100,6 +100,7 @@ def get_last_record_date(table: Base, session: Session) -> str:
 
     return last_inserted.record_date if last_inserted else None
 
+
 def get_first_record_date(table: str) -> str:
     """
     Retrieve latest record per table via API.
@@ -149,9 +150,9 @@ def job(session: Session):
             continue
 
         if last_record_date := get_last_record_date(table_obj, session):
-            record_date = "gt:" + last_record_date
+            record_date = f"gt:{last_record_date}"
         else:
-            record_date = "eq:" + record_date
+            record_date = f"eq:{record_date}"
 
         data_table = get_data_per_date(
             table_lowered, record_date + "&page%5Bsize%5D=10000"
@@ -163,7 +164,7 @@ def job(session: Session):
             table_model = dts_tables[item.get("table_nbr")]
             data_objs.append(table_model(**item))
 
-        print(f"Inserting {table_name} to database for date {record_date.split(':')[-1]}.")
+        print(f"Inserting {table_name} to database for date {record_date}.")
         insert(data_objs, session)
 
 

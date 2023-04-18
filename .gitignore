@@ -10,7 +10,6 @@ __pycache__/
 # Data Files
 *.pdf
 *.png
-*.txt
 
 # Jupyter files
 *.ipynb
