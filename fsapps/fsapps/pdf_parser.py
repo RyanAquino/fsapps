@@ -1,6 +1,7 @@
 import re
 from pathlib import Path
-from fsapps.fsapps.text_parser import format_data, is_day, table_v_data_handler
+from text_parser import format_data, is_day, table_v_data_handler
+from helper import insert_data
 import wordninja
 
 import pdfplumber
@@ -41,7 +42,8 @@ def flatten_data(pdf_data):
             continue
 
         if item is not None and item != "":
-            item = re.sub(r"[\$,]", "", item)
+            item = re.sub(r"[\,]", "", item)
+            item = re.sub(r"[\$]", " ", item)
             item = item.replace(".", "").strip()
             item = wordninja.split(item)
             item = " ".join(item)
@@ -177,21 +179,27 @@ def transform_data(pdf_data):
 
 
 def main():
-    files_path = Path.cwd().parent / "data"
+    files_path = (Path.cwd().parent / "data").glob("*.pdf")
     no_edges = []
     exceptions = []
+    sql_exceptions = []
 
-    for item in files_path.iterdir():
-        if item.suffix == ".pdf":
-            try:
-                pdf_data, edges = pdf_parser(item)
-                no_edges += edges
-                print(transform_data(pdf_data))
-            except Exception as e:
-                exceptions.append({"item": item, "exc": str(e)})
+    for item in files_path:
+        pdf_data = None
+
+        try:
+            pdf_data, edges = pdf_parser(item)
+            no_edges += edges
+        except Exception as e:
+            exceptions.append({"item": item, "exc": str(e)})
+
+        if pdf_data:
+            result = transform_data(pdf_data)
+            sql_exceptions += insert_data(result, item)
 
     print("No edges: ", no_edges)
     print("Exceptions: ", exceptions)
+    print("SQL Exceptions: ", sql_exceptions)
 
 
 if __name__ == "__main__":
