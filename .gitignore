@@ -10,7 +10,6 @@ __pycache__/
 # Data Files
 *.pdf
 *.png
-*.txt
 
 # Jupyter files
 *.ipynb
@@ -141,3 +140,9 @@ dmypy.json
 # Customs
 .idea/
 .DS_Store
+
+# Database files
+*.db
+
+# VSCode Files
+*.vs
