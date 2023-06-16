@@ -15,5 +15,5 @@ pip install -r requirements.txt
 
 Run the following command on the CLI
 ```python
-python dtsapi.py
+python api.py
 ```

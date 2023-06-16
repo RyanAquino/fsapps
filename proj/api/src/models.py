@@ -1,6 +1,9 @@
 """DTS database Model definitions."""
 from sqlalchemy import Column, Integer, String, create_engine
 from sqlalchemy.orm import declarative_base
+from dotenv import load_dotenv
+import os
+
 
 Base = declarative_base()
 
@@ -8,7 +11,7 @@ Base = declarative_base()
 class DTS_Table_1(Base):
     # pylint:disable=too-few-public-methods,invalid-name
     """DTS Table 1."""
-    __tablename__ = "dts_table_1"
+    __tablename__ = "b001b_dts_table_1"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -32,7 +35,7 @@ class DTS_Table_1(Base):
 class DTS_Table_2(Base):
     # pylint:disable=too-few-public-methods,invalid-name
     """DTS Table 2."""
-    __tablename__ = "dts_table_2"
+    __tablename__ = "b001b_dts_table_2"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -57,7 +60,7 @@ class DTS_Table_2(Base):
 class DTS_Table_3a(Base):
     # pylint:disable=too-few-public-methods,invalid-name
     """DTS Table 3a."""
-    __tablename__ = "dts_table_3a"
+    __tablename__ = "b001b_dts_table_3a"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -83,7 +86,7 @@ class DTS_Table_3a(Base):
 class DTS_Table_3b(Base):
     # pylint:disable=too-few-public-methods,invalid-name
     """DTS Table 3b."""
-    __tablename__ = "dts_table_3b"
+    __tablename__ = "b001b_dts_table_3b"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -110,7 +113,7 @@ class DTS_Table_3b(Base):
 class DTS_Table_3c(Base):
     # pylint:disable=too-few-public-methods,invalid-name
     """DTS Table 3c."""
-    __tablename__ = "dts_table_3c"
+    __tablename__ = "b001b_dts_table_3c"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -137,7 +140,7 @@ class DTS_Table_3c(Base):
 class DTS_Table_4(Base):
     # pylint:disable=too-few-public-methods,invalid-name
     """DTS Table 4."""
-    __tablename__ = "dts_table_4"
+    __tablename__ = "b001b_dts_table_4"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -161,7 +164,7 @@ class DTS_Table_4(Base):
 class DTS_Table_5(Base):
     # pylint:disable=too-few-public-methods,invalid-name
     """DTS Table 5."""
-    __tablename__ = "dts_table_5"
+    __tablename__ = "b001b_dts_table_5"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -191,7 +194,7 @@ class DTS_Table_5(Base):
 class DTS_Table_6(Base):
     # pylint:disable=too-few-public-methods,invalid-name
     """DTS Table 6."""
-    __tablename__ = "dts_table_6"
+    __tablename__ = "b001b_dts_table_6"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -218,12 +221,25 @@ class DTS_Table_6(Base):
     record_calendar_day = Column(String(200), nullable=True)
 
 
+def configure():
+    load_dotenv()
+
+
 def init_db():
     """
     Initialize DB engine and tables.
     :return: DB engine
     """
-    engine = create_engine("sqlite:///dts_tables.db")
+    configure()
+    # Returns `default_value` if the key doesn't exist
+    proj = os.environ.get('working_env', 'local')
+    conn = str(os.getenv('conn'))
+    if proj == 'remote':
+        print("remote")
+        with open('/run/secrets/db_conn') as f:
+            conn = f.readlines()[0]
+
+    engine = create_engine(conn)
     Base.metadata.create_all(engine)
 
     return engine

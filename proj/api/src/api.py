@@ -4,7 +4,7 @@ from pytz import timezone
 import requests
 import schedule
 from sqlalchemy.orm import Session, sessionmaker
-from dts_models import (
+from models import (
     Base,
     DTS_Table_1,
     DTS_Table_2,
@@ -141,7 +141,7 @@ def job(session: Session):
         table_lowered = table_name.lower()
         record_date = get_first_record_date(table_lowered)
         exists = check_date_exists(table_obj, record_date, session)
-        table_v_exists = table_lowered == "dts_table_6" and check_date_exists(
+        table_v_exists = table_lowered == "b001b_dts_table_6" and check_date_exists(
             DTS_Table_5, record_date, session
         )
 
