@@ -240,6 +240,7 @@ def init_db():
             conn = f.readlines()[0]
 
     engine = create_engine(conn)
-    Base.metadata.create_all(engine)
+    # disable for prod, user has only select and insert privileges
+    # Base.metadata.create_all(engine)
 
     return engine
