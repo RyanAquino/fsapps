@@ -2,3 +2,5 @@
 .DS_Store
 venv/
 *.db
+__pycache__
+*.log

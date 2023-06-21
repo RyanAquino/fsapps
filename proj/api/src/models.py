@@ -235,7 +235,6 @@ def init_db():
     proj = os.environ.get('working_env', 'local')
     conn = str(os.getenv('conn'))
     if proj == 'remote':
-        print("remote")
         with open('/run/secrets/db_conn') as f:
             conn = f.readlines()[0]
 

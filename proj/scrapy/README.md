@@ -14,7 +14,7 @@ pip install -r requirements.txt
 
 ## Navigate to project
 ```bash
-cd proj
+cd proj/scrapy
 ```
 
 Scrapy is the module used on this project. More info can be found on this [Documentation](https://docs.scrapy.org/en/latest/intro/tutorial.html).
@@ -28,14 +28,14 @@ scrapy crawl fsapps
 
 Run with log file as output
 ```python
-scrapy crawl fsapps --logfile=logs.log
+scrapy crawl fsapps --logfile=fsgov.log
 ```
 
 
 ## Running parsers on scraped files
 ### Navigate to fsapps package
 ```bash
-cd proj/fsapps
+cd proj/scrapy/fsapps
 ```
 
 ### Install dependencies

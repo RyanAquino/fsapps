@@ -1,14 +1,20 @@
 from sqlalchemy import create_engine, ForeignKey, Column, Integer, String
 from sqlalchemy.orm import Session, relationship, declarative_base
 from sqlalchemy.exc import IntegrityError
+from dotenv import load_dotenv
+import os
 
-engine = create_engine("sqlite:///fsapps.db", echo=False)
+
+load_dotenv()
+conn = str(os.getenv('conn'))
+engine = create_engine(conn, echo=False)
+# engine = create_engine("sqlite:///fsapps.db", echo=False)
 
 Base = declarative_base()
 
 
 class TableDef(Base):
-    __tablename__ = "tabledef"
+    __tablename__ = "b001b_arch_tabledef"
 
     id = Column(Integer, primary_key=True)
     table_name = Column(String(200))
@@ -16,7 +22,7 @@ class TableDef(Base):
 
 
 class OpCashBal(Base):
-    __tablename__ = "opcashbal"
+    __tablename__ = "b001b_arch_opcashbal"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -33,12 +39,12 @@ class OpCashBal(Base):
     record_calendar_quarter = Column(String(200), nullable=True)
     record_calendar_month = Column(String(200), nullable=True)
     record_calendar_day = Column(String(200), nullable=True)
-    table_id = Column(Integer, ForeignKey("tabledef.id"))
+    table_id = Column(Integer, ForeignKey("b001b_arch_tabledef.id"))
     tabledef = relationship("TableDef", foreign_keys=[table_id])
 
 
 class OpCashDpstWdrl(Base):
-    __tablename__ = "opcashdpstwdrl"
+    __tablename__ = "b001b_arch_opcashdpstwdrl"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -56,12 +62,12 @@ class OpCashDpstWdrl(Base):
     record_calendar_quarter = Column(String(200), nullable=True)
     record_calendar_month = Column(String(200), nullable=True)
     record_calendar_day = Column(String(200), nullable=True)
-    table_id = Column(Integer, ForeignKey("tabledef.id"))
+    table_id = Column(Integer, ForeignKey("b001b_arch_tabledef.id"))
     tabledef = relationship("TableDef", foreign_keys=[table_id])
 
 
 class PubDebtTrans(Base):
-    __tablename__ = "pubdebttrans"
+    __tablename__ = "b001b_arch_pubdebttrans"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -79,12 +85,12 @@ class PubDebtTrans(Base):
     record_calendar_quarter = Column(String(200), nullable=True)
     record_calendar_month = Column(String(200), nullable=True)
     record_calendar_day = Column(String(200), nullable=True)
-    table_id = Column(Integer, ForeignKey("tabledef.id"))
+    table_id = Column(Integer, ForeignKey("b001b_arch_tabledef.id"))
     tabledef = relationship("TableDef", foreign_keys=[table_id])
 
 
 class PubDebtCashAdj(Base):
-    __tablename__ = "pubdebtcashadj"
+    __tablename__ = "b001b_arch_pubdebtcashadj"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -102,12 +108,12 @@ class PubDebtCashAdj(Base):
     record_calendar_quarter = Column(String(200), nullable=True)
     record_calendar_month = Column(String(200), nullable=True)
     record_calendar_day = Column(String(200), nullable=True)
-    table_id = Column(Integer, ForeignKey("tabledef.id"))
+    table_id = Column(Integer, ForeignKey("b001b_arch_tabledef.id"))
     tabledef = relationship("TableDef", foreign_keys=[table_id])
 
 
 class DebtSubjLim(Base):
-    __tablename__ = "debtsubjlim"
+    __tablename__ = "b001b_arch_debtsubjlim"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -125,12 +131,12 @@ class DebtSubjLim(Base):
     record_calendar_quarter = Column(String(200), nullable=True)
     record_calendar_month = Column(String(200), nullable=True)
     record_calendar_day = Column(String(200), nullable=True)
-    table_id = Column(Integer, ForeignKey("tabledef.id"))
+    table_id = Column(Integer, ForeignKey("b001b_arch_tabledef.id"))
     tabledef = relationship("TableDef", foreign_keys=[table_id])
 
 
 class FedTaxDpst(Base):
-    __tablename__ = "fedtaxdpst"
+    __tablename__ = "b001b_arch_fedtaxdpst"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -147,12 +153,12 @@ class FedTaxDpst(Base):
     record_calendar_quarter = Column(String(200), nullable=True)
     record_calendar_month = Column(String(200), nullable=True)
     record_calendar_day = Column(String(200), nullable=True)
-    table_id = Column(Integer, ForeignKey("tabledef.id"))
+    table_id = Column(Integer, ForeignKey("b001b_arch_tabledef.id"))
     tabledef = relationship("TableDef", foreign_keys=[table_id])
 
 
 class TaxLoanNtBDepCat(Base):
-    __tablename__ = "taxLoanntbdepcat"
+    __tablename__ = "b001b_arch_taxLoanntbdepcat"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -170,12 +176,12 @@ class TaxLoanNtBDepCat(Base):
     record_calendar_quarter = Column(String(200), nullable=True)
     record_calendar_month = Column(String(200), nullable=True)
     record_calendar_day = Column(String(200), nullable=True)
-    table_id = Column(Integer, ForeignKey("tabledef.id"))
+    table_id = Column(Integer, ForeignKey("b001b_arch_tabledef.id"))
     tabledef = relationship("TableDef", foreign_keys=[table_id])
 
 
 class StCashInvest(Base):
-    __tablename__ = "stcashinvest"
+    __tablename__ = "b001b_arch_stcashinvest"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -193,12 +199,12 @@ class StCashInvest(Base):
     record_calendar_quarter = Column(String(200), nullable=True)
     record_calendar_month = Column(String(200), nullable=True)
     record_calendar_day = Column(String(200), nullable=True)
-    table_id = Column(Integer, ForeignKey("tabledef.id"))
+    table_id = Column(Integer, ForeignKey("b001b_arch_tabledef.id"))
     tabledef = relationship("TableDef", foreign_keys=[table_id])
 
 
 class IncmTaxRfnd(Base):
-    __tablename__ = "incmtaxrfnd"
+    __tablename__ = "b001b_arch_incmtaxrfnd"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -215,7 +221,7 @@ class IncmTaxRfnd(Base):
     record_calendar_quarter = Column(String(200), nullable=True)
     record_calendar_month = Column(String(200), nullable=True)
     record_calendar_day = Column(String(200), nullable=True)
-    table_id = Column(Integer, ForeignKey("tabledef.id"))
+    table_id = Column(Integer, ForeignKey("b001b_arch_tabledef.id"))
     tabledef = relationship("TableDef", foreign_keys=[table_id])
 
 
