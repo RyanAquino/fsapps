@@ -131,10 +131,31 @@ class DTS_Table_3c(Base):
     record_calendar_month = Column(String(200), nullable=True)
     record_calendar_day = Column(String(200), nullable=True)
 
-
 class DTS_Table_4(Base):
     # pylint:disable=too-few-public-methods,invalid-name
     """DTS Table 4."""
+    __tablename__ = "inter_agency_tax_transfers"
+
+    id = Column(Integer, primary_key=True)
+    record_date = Column(String(200), nullable=True)
+    classification = Column(String(200), nullable=True)
+    record_today_amt = Column(String(200), nullable=True)
+    record_mtd_amt = Column(String(200), nullable=True)
+    record_fytd_amt = Column(String(200), nullable=True)
+    table_nbr = Column(String(200), nullable=True)
+    table_name = Column(String(200), nullable=True)
+    sub_table_name = Column(String(200), nullable=True)
+    src_line_nbr = Column(String(200), nullable=True)
+    record_fiscal_year = Column(String(200), nullable=True)
+    record_fiscal_quarter = Column(String(200), nullable=True)
+    record_calendar_year = Column(String(200), nullable=True)
+    record_calendar_quarter = Column(String(200), nullable=True)
+    record_calendar_month = Column(String(200), nullable=True)
+    record_calendar_day = Column(String(200), nullable=True)
+
+class DTS_Table_5(Base):
+    # pylint:disable=too-few-public-methods,invalid-name
+    """DTS Table 5."""
     __tablename__ = "income_tax_refunds_issued"
 
     id = Column(Integer, primary_key=True)
@@ -156,9 +177,9 @@ class DTS_Table_4(Base):
     record_calendar_day = Column(String(200), nullable=True)
 
 
-class DTS_Table_5(Base):
+class DTS_Table_6(Base):
     # pylint:disable=too-few-public-methods,invalid-name
-    """DTS Table 5."""
+    """DTS Table 6."""
     __tablename__ = "federal_tax_deposits"
 
     id = Column(Integer, primary_key=True)
@@ -180,9 +201,9 @@ class DTS_Table_5(Base):
     record_calendar_day = Column(String(200), nullable=True)
 
 
-class DTS_Table_6(Base):
+class DTS_Table_7(Base):
     # pylint:disable=too-few-public-methods,invalid-name
-    """DTS Table 6."""
+    """DTS Table 7."""
     __tablename__ = "short_term_cash_investments"
 
     id = Column(Integer, primary_key=True)
