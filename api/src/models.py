@@ -246,8 +246,7 @@ def init_db():
         with open('/run/secrets/db_conn') as f:
             conn = f.readlines()[0]
 
-    # engine = create_engine(conn)
-    engine = create_engine("sqlite:///test.db ")
+    engine = create_engine(conn)
     # disable for prod, user has only select and insert privileges
     Base.metadata.create_all(engine)
 
