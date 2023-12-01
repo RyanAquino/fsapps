@@ -8,10 +8,10 @@ import os
 Base = declarative_base()
 
 
-class DTS_Table_1(Base):
+class Operating_Cash_Balance(Base):
     # pylint:disable=too-few-public-methods,invalid-name
     """DTS Table 1."""
-    __tablename__ = "operating_cash_bal"
+    __tablename__ = "operating_cash_balance"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -21,7 +21,7 @@ class DTS_Table_1(Base):
     open_month_bal = Column(String(200), nullable=True)
     open_fiscal_year_bal = Column(String(200), nullable=True)
     table_nbr = Column(String(200), nullable=True)
-    table_name = Column(String(200), nullable=True)
+    table_nm = Column(String(200), nullable=True)
     sub_table_name = Column(String(200), nullable=True)
     src_line_nbr = Column(String(200), nullable=True)
     record_fiscal_year = Column(String(200), nullable=True)
@@ -32,7 +32,7 @@ class DTS_Table_1(Base):
     record_calendar_day = Column(String(200), nullable=True)
 
 
-class DTS_Table_2(Base):
+class Deposits_Withdrawals_Operating_Cash(Base):
     # pylint:disable=too-few-public-methods,invalid-name
     """DTS Table 2."""
     __tablename__ = "deposits_withdrawals_operating_cash"
@@ -47,7 +47,7 @@ class DTS_Table_2(Base):
     transaction_mtd_amt = Column(String(200), nullable=True)
     transaction_fytd_amt = Column(String(200), nullable=True)
     table_nbr = Column(String(200), nullable=True)
-    table_name = Column(String(200), nullable=True)
+    table_nm = Column(String(200), nullable=True)
     src_line_nbr = Column(String(200), nullable=True)
     record_fiscal_year = Column(String(200), nullable=True)
     record_fiscal_quarter = Column(String(200), nullable=True)
@@ -57,9 +57,9 @@ class DTS_Table_2(Base):
     record_calendar_day = Column(String(200), nullable=True)
 
 
-class DTS_Table_3a(Base):
+class Public_Debt_Transactions(Base):
     # pylint:disable=too-few-public-methods,invalid-name
-    """DTS Table 3a."""
+    """DTS Table 3."""
     __tablename__ = "public_debt_transactions"
 
     id = Column(Integer, primary_key=True)
@@ -72,7 +72,7 @@ class DTS_Table_3a(Base):
     transaction_mtd_amt = Column(String(200), nullable=True)
     transaction_fytd_amt = Column(String(200), nullable=True)
     table_nbr = Column(String(200), nullable=True)
-    table_name = Column(String(200), nullable=True)
+    table_nm = Column(String(200), nullable=True)
     src_line_nbr = Column(String(200), nullable=True)
     record_fiscal_year = Column(String(200), nullable=True)
     record_fiscal_quarter = Column(String(200), nullable=True)
@@ -82,10 +82,10 @@ class DTS_Table_3a(Base):
     record_calendar_day = Column(String(200), nullable=True)
 
 
-class DTS_Table_3b(Base):
+class Adjustment_Public_Debt_Transactions_Cash_Basis(Base):
     # pylint:disable=too-few-public-methods,invalid-name
-    """DTS Table 3b."""
-    __tablename__ = "public_debt_transactions_cash_basis"
+    """DTS Table 4."""
+    __tablename__ = "adjustment_public_debt_transactions_cash_basis"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -96,7 +96,7 @@ class DTS_Table_3b(Base):
     adj_mtd_amt = Column(String(200), nullable=True)
     adj_fytd_amt = Column(String(200), nullable=True)
     table_nbr = Column(String(200), nullable=True)
-    table_name = Column(String(200), nullable=True)
+    table_nm = Column(String(200), nullable=True)
     sub_table_name = Column(String(200), nullable=True)
     src_line_nbr = Column(String(200), nullable=True)
     record_fiscal_year = Column(String(200), nullable=True)
@@ -107,10 +107,10 @@ class DTS_Table_3b(Base):
     record_calendar_day = Column(String(200), nullable=True)
 
 
-class DTS_Table_3c(Base):
+class Debt_Subject_To_Limit(Base):
     # pylint:disable=too-few-public-methods,invalid-name
-    """DTS Table 3c."""
-    __tablename__ = "debt_subject_limit"
+    """DTS Table 5."""
+    __tablename__ = "debt_subject_to_limit"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
@@ -121,7 +121,7 @@ class DTS_Table_3c(Base):
     open_month_bal = Column(String(200), nullable=True)
     open_fiscal_year_bal = Column(String(200), nullable=True)
     table_nbr = Column(String(200), nullable=True)
-    table_name = Column(String(200), nullable=True)
+    table_nm = Column(String(200), nullable=True)
     sub_table_name = Column(String(200), nullable=True)
     src_line_nbr = Column(String(200), nullable=True)
     record_fiscal_year = Column(String(200), nullable=True)
@@ -131,19 +131,19 @@ class DTS_Table_3c(Base):
     record_calendar_month = Column(String(200), nullable=True)
     record_calendar_day = Column(String(200), nullable=True)
 
-class DTS_Table_4(Base):
+class Inter_Agency_Tax_Transfers(Base):
     # pylint:disable=too-few-public-methods,invalid-name
-    """DTS Table 4."""
+    """DTS Table 6."""
     __tablename__ = "inter_agency_tax_transfers"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)
     classification = Column(String(200), nullable=True)
-    record_today_amt = Column(String(200), nullable=True)
-    record_mtd_amt = Column(String(200), nullable=True)
-    record_fytd_amt = Column(String(200), nullable=True)
+    today_amt = Column(String(200), nullable=True)
+    mtd_amt = Column(String(200), nullable=True)
+    fytd_amt = Column(String(200), nullable=True)
     table_nbr = Column(String(200), nullable=True)
-    table_name = Column(String(200), nullable=True)
+    table_nm = Column(String(200), nullable=True)
     sub_table_name = Column(String(200), nullable=True)
     src_line_nbr = Column(String(200), nullable=True)
     record_fiscal_year = Column(String(200), nullable=True)
@@ -153,9 +153,9 @@ class DTS_Table_4(Base):
     record_calendar_month = Column(String(200), nullable=True)
     record_calendar_day = Column(String(200), nullable=True)
 
-class DTS_Table_5(Base):
+class Income_Tax_Refunds_Issued(Base):
     # pylint:disable=too-few-public-methods,invalid-name
-    """DTS Table 5."""
+    """DTS Table 7."""
     __tablename__ = "income_tax_refunds_issued"
 
     id = Column(Integer, primary_key=True)
@@ -166,7 +166,7 @@ class DTS_Table_5(Base):
     tax_refund_mtd_amt = Column(String(200), nullable=True)
     tax_refund_fytd_amt = Column(String(200), nullable=True)
     table_nbr = Column(String(200), nullable=True)
-    table_name = Column(String(200), nullable=True)
+    table_nm = Column(String(200), nullable=True)
     sub_table_name = Column(String(200), nullable=True)
     src_line_nbr = Column(String(200), nullable=True)
     record_fiscal_year = Column(String(200), nullable=True)
@@ -177,9 +177,9 @@ class DTS_Table_5(Base):
     record_calendar_day = Column(String(200), nullable=True)
 
 
-class DTS_Table_6(Base):
+class Federal_Tax_Deposits(Base):
     # pylint:disable=too-few-public-methods,invalid-name
-    """DTS Table 6."""
+    """DTS Table 8."""
     __tablename__ = "federal_tax_deposits"
 
     id = Column(Integer, primary_key=True)
@@ -190,7 +190,7 @@ class DTS_Table_6(Base):
     tax_deposit_mtd_amt = Column(String(200), nullable=True)
     tax_deposit_fytd_amt = Column(String(200), nullable=True)
     table_nbr = Column(String(200), nullable=True)
-    table_name = Column(String(200), nullable=True)
+    table_nm = Column(String(200), nullable=True)
     sub_table_name = Column(String(200), nullable=True)
     src_line_nbr = Column(String(200), nullable=True)
     record_fiscal_year = Column(String(200), nullable=True)
@@ -201,9 +201,9 @@ class DTS_Table_6(Base):
     record_calendar_day = Column(String(200), nullable=True)
 
 
-class DTS_Table_7(Base):
+class Short_Term_Cash_Investments(Base):
     # pylint:disable=too-few-public-methods,invalid-name
-    """DTS Table 7."""
+    """DTS Table 9."""
     __tablename__ = "short_term_cash_investments"
 
     id = Column(Integer, primary_key=True)
@@ -215,7 +215,7 @@ class DTS_Table_7(Base):
     depositary_type_c_amt = Column(String(200), nullable=True)
     total_amt = Column(String(200), nullable=True)
     table_nbr = Column(String(200), nullable=True)
-    table_name = Column(String(200), nullable=True)
+    table_nm = Column(String(200), nullable=True)
     sub_table_name = Column(String(200), nullable=True)
     src_line_nbr = Column(String(200), nullable=True)
     record_fiscal_year = Column(String(200), nullable=True)
@@ -246,8 +246,9 @@ def init_db():
         with open('/run/secrets/db_conn') as f:
             conn = f.readlines()[0]
 
-    engine = create_engine(conn)
+    # engine = create_engine(conn)
+    engine = create_engine("sqlite:///test.db ")
     # disable for prod, user has only select and insert privileges
-    # Base.metadata.create_all(engine)
+    Base.metadata.create_all(engine)
 
     return engine

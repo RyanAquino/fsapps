@@ -6,14 +6,15 @@ import schedule
 from sqlalchemy.orm import Session, sessionmaker
 from models import (
     Base,
-    DTS_Table_1,
-    DTS_Table_2,
-    DTS_Table_3a,
-    DTS_Table_3b,
-    DTS_Table_3c,
-    DTS_Table_4,
-    DTS_Table_5,
-    DTS_Table_6,
+    Operating_Cash_Balance,
+    Deposits_Withdrawals_Operating_Cash,
+    Public_Debt_Transactions,
+    Adjustment_Public_Debt_Transactions_Cash_Basis,
+    Debt_Subject_To_Limit,
+    Inter_Agency_Tax_Transfers,
+    Income_Tax_Refunds_Issued,
+    Federal_Tax_Deposits,
+    Short_Term_Cash_Investments,
     init_db,
 )
 
@@ -126,28 +127,29 @@ def job(session: Session):
     :return: None
     """
     dts_tables = {
-        "I": DTS_Table_1,
-        "II": DTS_Table_2,
-        "IIIA": DTS_Table_3a,
-        "IIIB": DTS_Table_3b,
-        "IIIC": DTS_Table_3c,
-        "IV": DTS_Table_4,
-        "V": DTS_Table_5,
-        "VI": DTS_Table_6,
+        "Operating Cash Balance": Operating_Cash_Balance,
+        "Deposits and Withdrawals of Operating Cash": Deposits_Withdrawals_Operating_Cash,
+        "Public Debt Transactions": Public_Debt_Transactions,
+        "Adjustment of Public Debt Transactions to Cash Basis": Adjustment_Public_Debt_Transactions_Cash_Basis,
+        "Debt Subject to Limit": Debt_Subject_To_Limit,
+        "Inter-agency Tax Transfers": Inter_Agency_Tax_Transfers,
+        "Income Tax Refunds Issued": Income_Tax_Refunds_Issued,
+        "Federal Tax Deposits": Federal_Tax_Deposits,
+        "Short-Term Cash Investments": Short_Term_Cash_Investments,
     }
 
     for table_obj in dts_tables.values():
         table_name = table_obj.__name__
         table_lowered = table_name.lower()
         record_date = get_first_record_date(table_lowered)
-        exists = check_date_exists(table_obj, record_date, session)
-        table_v_exists = table_lowered == "b001b_dts_table_6" and check_date_exists(
-            DTS_Table_5, record_date, session
-        )
-
-        if exists or table_v_exists:
-            print(f"Skipping!! data exists for date {record_date} on {table_lowered}.")
-            continue
+        #exists = check_date_exists(table_obj, record_date, session)
+        # table_v_exists = table_lowered == "b001b_dts_table_6" and check_date_exists(
+        #     DTS_Table_5, record_date, session
+        # )
+        #
+        # if exists or table_v_exists:
+        #     print(f"Skipping!! data exists for date {record_date} on {table_lowered}.")
+        #     continue
 
         if last_record_date := get_last_record_date(table_obj, session):
             record_date = f"gt:{last_record_date}"
@@ -161,7 +163,7 @@ def job(session: Session):
 
         # Map tables / special case for table data not in requested table API
         for item in data_table:
-            table_model = dts_tables[item.get("table_nbr")]
+            table_model = dts_tables[item.get("table_nm")]
             data_objs.append(table_model(**item))
 
         print(f"Inserting {table_name} to database for date {record_date}.")
