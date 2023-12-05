@@ -142,14 +142,14 @@ def job(session: Session):
         table_name = table_obj.__name__
         table_lowered = table_name.lower()
         record_date = get_first_record_date(table_lowered)
-        #exists = check_date_exists(table_obj, record_date, session)
+        exists = check_date_exists(table_obj, record_date, session)
         # table_v_exists = table_lowered == "b001b_dts_table_6" and check_date_exists(
         #     DTS_Table_5, record_date, session
         # )
-        #
-        # if exists or table_v_exists:
-        #     print(f"Skipping!! data exists for date {record_date} on {table_lowered}.")
-        #     continue
+
+        if exists:
+            print(f"Skipping!! data exists for date {record_date} on {table_lowered}.")
+            continue
 
         if last_record_date := get_last_record_date(table_obj, session):
             record_date = f"gt:{last_record_date}"
