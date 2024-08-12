@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     app_port: int = Field(alias="APP_PORT", default=8000)
     app_debug: bool = Field(alias="APP_DEBUG", default=False)
 
-    model_config = SettingsConfigDict(env_file="../.env")
+    model_config = SettingsConfigDict(env_file=".env")
 
 
 @lru_cache
