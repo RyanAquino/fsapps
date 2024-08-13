@@ -1,14 +1,23 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { Select, MenuItem } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import DashboardCard from '../../../components/shared/DashboardCard';
 import Chart from 'react-apexcharts';
+import {dtsTable} from "../../../api/utils";
 
 
 const SalesOverview = () => {
+    const [tableData, setTableData] = useState([]);
+
+    useEffect(async () => {
+        const fetchTableData = async () => await dtsTable("operating_cash_balance");
+        fetchTableData().then((tableData) => {
+            setTableData(tableData);
+        })
+    }, []);
 
     // select
-    const [month, setMonth] = React.useState('1');
+    const [month, setMonth] = useState('1');
 
     const handleChange = (event) => {
         setMonth(event.target.value);
@@ -22,75 +31,78 @@ const SalesOverview = () => {
     // chart
     const optionscolumnchart = {
         chart: {
-            type: 'bar',
-            fontFamily: "'Plus Jakarta Sans', sans-serif;",
-            foreColor: '#adb0bb',
+            type: 'area',
+            stacked: false,
+            height: 350,
+            zoom: {
+                type: 'x',
+                enabled: true,
+                autoScaleYaxis: true
+            },
             toolbar: {
-                show: true,
-            },
-            height: 370,
+                autoSelected: 'zoom'
+            }
         },
-        colors: [primary, secondary],
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                barHeight: '60%',
-                columnWidth: '42%',
-                borderRadius: [6],
-                borderRadiusApplication: 'end',
-                borderRadiusWhenStacked: 'all',
-            },
-        },
-
-        stroke: {
-            show: true,
-            width: 5,
-            lineCap: "butt",
-            colors: ["transparent"],
-          },
         dataLabels: {
-            enabled: false,
+            enabled: false
         },
-        legend: {
-            show: false,
+        markers: {
+            size: 0,
         },
-        grid: {
-            borderColor: 'rgba(0,0,0,0.1)',
-            strokeDashArray: 3,
-            xaxis: {
-                lines: {
-                    show: false,
-                },
+        // title: {
+        //     text: 'Stock Price Movement',
+        //     align: 'left'
+        // },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shadeIntensity: 1,
+                inverseColors: false,
+                opacityFrom: 0.5,
+                opacityTo: 0,
+                stops: [0, 90, 100]
             },
         },
         yaxis: {
-            tickAmount: 4,
-        },
-        xaxis: {
-            categories: ['16/08', '17/08', '18/08', '19/08', '20/08', '21/08', '22/08', '23/08'],
-            axisBorder: {
-                show: false,
+            labels: {
+                formatter: function (val) {
+                    return (val / 1000000).toFixed(0);
+                },
+            },
+            title: {
+                text: 'Price'
             },
         },
-        tooltip: {
-            theme: theme.palette.mode === 'dark' ? 'dark' : 'light',
-            fillSeriesColor: false,
+        xaxis: {
+            type: 'datetime',
         },
+        tooltip: {
+            shared: false,
+            y: {
+                formatter: function (val) {
+                    return (val / 1000000).toFixed(0)
+                }
+            }
+        }
     };
     const seriescolumnchart = [
         {
             name: 'Eanings this month',
-            data: [355, 390, 300, 350, 390, 180, 355, 390],
+            data: [{ x: '05/06/2014', y: 54 }, { x: '05/08/2014', y: 17 }, { x: '05/28/2014', y: 26 }],
         },
         {
             name: 'Expense this month',
-            data: [280, 250, 325, 215, 250, 310, 280, 250],
+            data: [{ x: '05/06/2014', y: 4 }, { x: '05/08/2014', y: 55 }, { x: '05/28/2014', y: 236 }],
+        },
+        {
+            name: 'Expense this month 1',
+            data: [{ x: '05/06/2014', y: 541 }, { x: '05/08/2014', y: 417 }, { x: '05/28/2014', y: 226 }],
         },
     ];
 
     return (
 
-        <DashboardCard title="Sales Overview" action={
+        <DashboardCard title="Operating Cash Balance" action={
             <Select
                 labelId="month-dd"
                 id="month-dd"
@@ -106,7 +118,7 @@ const SalesOverview = () => {
             <Chart
                 options={optionscolumnchart}
                 series={seriescolumnchart}
-                type="bar"
+                type="area"
                 height="370px"
             />
         </DashboardCard>
