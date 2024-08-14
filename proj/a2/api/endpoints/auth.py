@@ -1,8 +1,9 @@
+from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
+
 from api.container import Application
 from api.models.requests.user_token import LoginTokenRequest, RegisterUserRequest
 from api.services.user_service import UserService
-from dependency_injector.wiring import inject, Provide
 
 router = APIRouter()
 

@@ -1,13 +1,13 @@
+from datetime import datetime, timedelta, timezone
+
 from dependency_injector import providers
 from fastapi import HTTPException, status
 from jose import jwt
-from api.models.requests.user_token import LoginTokenRequest, RegisterUserRequest
-from api.models.response.user_token import TokenResponse
-from api.repositories.user_repository import UserRepository, UserNotFoundError
 from sqlalchemy.exc import IntegrityError
 
-from datetime import datetime, timedelta, timezone
-
+from api.models.requests.user_token import LoginTokenRequest, RegisterUserRequest
+from api.models.response.user_token import TokenResponse
+from api.repositories.user_repository import UserNotFoundError, UserRepository
 from api.schemas.schemas import UserDBSchema
 
 

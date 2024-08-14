@@ -1,13 +1,15 @@
 from dependency_injector import containers, providers
-
-from api.database import Database
-from api.repositories.operating_cash_balance_repository import OperatingCashBalanceRepository
-from api.repositories.user_repository import UserRepository
-from api.services.dts_tables_service import DTSTablesService
-from api.services.user_service import UserService
 from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
+
+from api.database import Database
+from api.repositories.operating_cash_balance_repository import (
+    OperatingCashBalanceRepository,
+)
+from api.repositories.user_repository import UserRepository
 from api.schemas.schemas import UserDBSchema
+from api.services.dts_tables_service import DTSTablesService
+from api.services.user_service import UserService
 
 
 class Gateways(containers.DeclarativeContainer):

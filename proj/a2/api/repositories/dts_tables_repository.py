@@ -1,7 +1,8 @@
+from abc import ABC, abstractmethod
 from contextlib import AbstractContextManager
 from typing import Callable
+
 from sqlalchemy.orm import Session
-from abc import ABC, abstractmethod
 
 
 class DTSTablesBaseRepository(ABC):
@@ -11,7 +12,7 @@ class DTSTablesBaseRepository(ABC):
         self.session_factory = session_factory
 
     @abstractmethod
-    def get_data(self):
+    def get_all(self):
         pass
 
     @abstractmethod

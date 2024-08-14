@@ -5,7 +5,7 @@ from api.repositories.dts_tables_repository import DTSTablesBaseRepository
 class FederalTaxDepositsRepository(DTSTablesBaseRepository):
     name = "federal_tax_deposits"
 
-    def get_data(self):
+    def get_all(self):
         with self.session_factory() as session:
             return session.query(Federal_Tax_Deposits).all()
 

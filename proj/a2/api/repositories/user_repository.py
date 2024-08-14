@@ -1,5 +1,6 @@
 from contextlib import AbstractContextManager
 from typing import Callable, Type
+
 from sqlalchemy.orm import Session
 
 from api.models.models import User

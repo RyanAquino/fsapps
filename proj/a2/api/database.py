@@ -3,7 +3,7 @@ from contextlib import AbstractContextManager
 from typing import Callable
 
 from sqlalchemy import create_engine, orm
-from sqlalchemy.orm import declarative_base, Session
+from sqlalchemy.orm import Session, declarative_base
 
 Base = declarative_base()
 

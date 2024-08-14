@@ -5,7 +5,7 @@ from api.repositories.dts_tables_repository import DTSTablesBaseRepository
 class PublicDebtTransactionsRepository(DTSTablesBaseRepository):
     name = "public_debt_transactions"
 
-    def get_data(self):
+    def get_all(self):
         with self.session_factory() as session:
             return session.query(Public_Debt_Transactions).all()
 

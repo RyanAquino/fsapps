@@ -1,8 +1,8 @@
-from fastapi import APIRouter, Query, Depends
+from dependency_injector.wiring import Provide, inject
+from fastapi import APIRouter, Depends, Query
 
 from api.container import Application
 from api.services.dts_tables_service import DTSTablesService
-from dependency_injector.wiring import Provide, inject
 
 router = APIRouter()
 

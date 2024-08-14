@@ -1,5 +1,7 @@
 from typing import Callable, Optional
+
 from api.repositories.dts_tables_repository import DTSTablesBaseRepository
+from api.services.operating_cash_balance_service import OperatingCashBalanceService
 
 
 class DTSTablesService:
@@ -14,9 +16,18 @@ class DTSTablesService:
 
         return repository()
 
-    def get_data(self, table_name, filters=None):
+    def get_service(self, table_name: str):
         repository = self.get_repository(table_name)
-        data = repository.get_data()
+        table_service_mappings = {
+            "operating_cash_balance": OperatingCashBalanceService,
+        }
+        service = table_service_mappings.get(table_name)
+
+        return service(repository, service)
+
+    def get_data(self, table_name, filters=None):
+        service = self.get_service(table_name)
+        data = service.get_data(filters)
         return data
 
 
