@@ -7,7 +7,9 @@ from api.models.models import User
 
 class UserRepository:
 
-    def __init__(self, session_factory: Callable[..., AbstractContextManager[Session]]) -> None:
+    def __init__(
+        self, session_factory: Callable[..., AbstractContextManager[Session]]
+    ) -> None:
         self.session_factory = session_factory
 
     def get_all(self) -> list[Type[User]]:
@@ -30,7 +32,9 @@ class UserRepository:
 
     def add(self, username: str, password: str, is_active: bool = True) -> User:
         with self.session_factory() as session:
-            user = User(username=username, hashed_password=password, is_active=is_active)
+            user = User(
+                username=username, hashed_password=password, is_active=is_active
+            )
             session.add(user)
             session.commit()
             session.refresh(user)

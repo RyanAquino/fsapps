@@ -12,7 +12,14 @@ from api.schemas.schemas import UserDBSchema
 
 
 class UserService:
-    def __init__(self, user_repository: UserRepository, config: providers.Configuration, pwd_context, oauth2_scheme, user_schema: UserDBSchema):
+    def __init__(
+        self,
+        user_repository: UserRepository,
+        config: providers.Configuration,
+        pwd_context,
+        oauth2_scheme,
+        user_schema: UserDBSchema,
+    ):
         self._repository = user_repository
         self.config = config
         self.pwd_context = pwd_context
@@ -23,12 +30,12 @@ class UserService:
         hashed_pw = self.pwd_context.hash(request_payload.password)
         try:
             user = self._repository.add(
-                username=request_payload.username,
-                password=hashed_pw
+                username=request_payload.username, password=hashed_pw
             )
         except IntegrityError:
             raise HTTPException(
-                status_code=status.HTTP_409_CONFLICT, detail=f"User {request_payload.username} already exists."
+                status_code=status.HTTP_409_CONFLICT,
+                detail=f"User {request_payload.username} already exists.",
             )
         user_schema = self.user_schema.from_orm(user)
 
@@ -39,12 +46,11 @@ class UserService:
             user = self._repository.get_by_username(request_payload.username)
         except UserNotFoundError:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail=f"User {request_payload.username} not found."
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"User {request_payload.username} not found.",
             )
 
-        if not self.pwd_context.verify(
-            request_payload.password, user.hashed_password
-        ):
+        if not self.pwd_context.verify(request_payload.password, user.hashed_password):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Incorrect username or password",
@@ -52,7 +58,9 @@ class UserService:
             )
 
         user_schema = self.user_schema.from_orm(user)
-        user_schema.exp = datetime.now(timezone.utc) + timedelta(minutes=self.config.get("token_exp_minutes"))
+        user_schema.exp = datetime.now(timezone.utc) + timedelta(
+            minutes=self.config.get("token_exp_minutes")
+        )
         user = user_schema.dict()
         encoded_jwt = jwt.encode(user, self.config.get("secret_key"), algorithm="HS256")
 
