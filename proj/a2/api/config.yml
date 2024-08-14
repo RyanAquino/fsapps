@@ -1,0 +1,8 @@
+application:
+  port: 8000
+  host: localhost
+  debug: True
+  token_exp_minutes: 30
+  secret_key: 8837fccb8a19b9a6e942bee4ccc78c6c9791c60f21ee1391219c9d233af763bb
+database:
+  dsn: "mariadb+mariadbconnector://user:password@127.0.0.1:3306/mydatabase"
