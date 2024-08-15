@@ -1,6 +1,9 @@
 from typing import Callable, Optional
 
 from api.repositories.dts_tables_repository import DTSTablesBaseRepository
+from api.services.adjustment_public_debt_transactions_cash_basis_service import (
+    AdjustmentPublicDebtTransactionsCashBasisService,
+)
 from api.services.operating_cash_balance_service import OperatingCashBalanceService
 
 
@@ -20,6 +23,7 @@ class DTSTablesService:
         repository = self.get_repository(table_name)
         table_service_mappings = {
             "operating_cash_balance": OperatingCashBalanceService,
+            "adjustment_public_debt_transactions_cash_basis": AdjustmentPublicDebtTransactionsCashBasisService,
         }
         service = table_service_mappings.get(table_name)
 

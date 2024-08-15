@@ -3,6 +3,9 @@ from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 
 from api.database import Database
+from api.repositories.adjustment_public_debt_transactions_cash_basis_repository import (
+    AdjustmentPublicDebtTransactionsCashBasisRepository,
+)
 from api.repositories.operating_cash_balance_repository import (
     OperatingCashBalanceRepository,
 )
@@ -26,6 +29,10 @@ class Repositories(containers.DeclarativeContainer):
 
     operating_cash_balance_repository = providers.Factory(
         OperatingCashBalanceRepository, session_factory=gateways.db.provided.session
+    )
+    adjustment_public_debt_transactions_cash_basis_repository = providers.Factory(
+        AdjustmentPublicDebtTransactionsCashBasisRepository,
+        session_factory=gateways.db.provided.session,
     )
 
 
@@ -53,7 +60,8 @@ class Services(containers.DeclarativeContainer):
     dts_tables_service = providers.Factory(
         DTSTablesService,
         dts_tables_repository={
-            "operating_cash_balance": repositories.operating_cash_balance_repository
+            "operating_cash_balance": repositories.operating_cash_balance_repository,
+            "adjustment_public_debt_transactions_cash_basis": repositories.adjustment_public_debt_transactions_cash_basis_repository,
         },
     )
 

@@ -1,7 +1,8 @@
+import pandas as pd
+
 from api.repositories.dts_tables_repository import DTSTablesBaseRepository
 from api.schemas.schemas import OperatingCashBalanceDBSchema
 from api.services.dts_table_base_service import DTSBaseService
-import pandas as pd
 
 
 class OperatingCashBalanceService(DTSBaseService):
@@ -17,7 +18,9 @@ class OperatingCashBalanceService(DTSBaseService):
         df = pd.DataFrame(json_data)
 
         net_change_df = self.calculate_day_net_change(df)
-        df = df.merge(net_change_df[["net_change", "record_date"]], how="inner", on="record_date")
+        df = df.merge(
+            net_change_df[["net_change", "record_date"]], how="inner", on="record_date"
+        )
 
         json_data = df.to_dict(orient="records")
         return json_data
