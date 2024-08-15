@@ -4,7 +4,20 @@ from api.repositories.dts_tables_repository import DTSTablesBaseRepository
 from api.services.adjustment_public_debt_transactions_cash_basis_service import (
     AdjustmentPublicDebtTransactionsCashBasisService,
 )
+from api.services.debt_subject_to_limit_service import DebtSubjectToLimitService
+from api.services.deposits_withdrawals_operating_cash_service import (
+    DepositsWithdrawalsOperatingCashBalanceService,
+)
+from api.services.federal_tax_deposits_service import FederalTaxDepositsService
+from api.services.income_tax_refunds_issued_service import IncomeTaxRefundsIssuedService
+from api.services.inter_agency_tax_transfers_service import (
+    InterAgencyTaxTransfersService,
+)
 from api.services.operating_cash_balance_service import OperatingCashBalanceService
+from api.services.public_debt_transactions_service import PublicDebtTransactionsService
+from api.services.short_term_cash_investments_service import (
+    ShortTermCashInvestmentsService,
+)
 
 
 class DTSTablesService:
@@ -24,6 +37,13 @@ class DTSTablesService:
         table_service_mappings = {
             "operating_cash_balance": OperatingCashBalanceService,
             "adjustment_public_debt_transactions_cash_basis": AdjustmentPublicDebtTransactionsCashBasisService,
+            "debt_subject_to_limit": DebtSubjectToLimitService,
+            "deposits_withdrawals_operating_cash_balance": DepositsWithdrawalsOperatingCashBalanceService,
+            "federal_tax_deposits": FederalTaxDepositsService,
+            "income_tax_refunds_issued": IncomeTaxRefundsIssuedService,
+            "inter_agency_tax_transfers": InterAgencyTaxTransfersService,
+            "public_debt_transactions": PublicDebtTransactionsService,
+            "short_term_cash_investments": ShortTermCashInvestmentsService,
         }
         service = table_service_mappings.get(table_name)
 
