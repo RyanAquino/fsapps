@@ -9,8 +9,10 @@ import {dtsTable} from "../../../api/utils";
 const SalesOverview = () => {
     const [tableData, setTableData] = useState([]);
 
-    useEffect(async () => {
-        const fetchTableData = async () => await dtsTable("operating_cash_balance");
+    useEffect(() => {
+        const fetchTableData = async () => await dtsTable("operating_cash_balance").catch((err) => {
+            console.log(err);
+        });
         fetchTableData().then((tableData) => {
             setTableData(tableData);
         })
@@ -31,73 +33,87 @@ const SalesOverview = () => {
     // chart
     const optionscolumnchart = {
         chart: {
-            type: 'area',
-            stacked: false,
             height: 350,
-            zoom: {
-                type: 'x',
+            type: 'line',
+            dropShadow: {
                 enabled: true,
-                autoScaleYaxis: true
+                color: '#000',
+                top: 18,
+                left: 7,
+                blur: 10,
+                opacity: 0.2
+            },
+            zoom: {
+                enabled: false
             },
             toolbar: {
-                autoSelected: 'zoom'
+                show: false
             }
         },
+        colors: ['#77B6EA', '#545454'],
         dataLabels: {
-            enabled: false
+            enabled: true,
         },
-        markers: {
-            size: 0,
+        stroke: {
+            curve: 'smooth'
         },
         // title: {
-        //     text: 'Stock Price Movement',
+        //     text: 'Average High & Low Temperature',
         //     align: 'left'
         // },
-        fill: {
-            type: 'gradient',
-            gradient: {
-                shadeIntensity: 1,
-                inverseColors: false,
-                opacityFrom: 0.5,
-                opacityTo: 0,
-                stops: [0, 90, 100]
+        grid: {
+            borderColor: '#e7e7e7',
+            row: {
+                colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+                opacity: 0.5
             },
         },
-        yaxis: {
-            labels: {
-                formatter: function (val) {
-                    return (val / 1000000).toFixed(0);
-                },
-            },
-            title: {
-                text: 'Price'
-            },
+        markers: {
+            size: 1
         },
         xaxis: {
-            type: 'datetime',
-        },
-        tooltip: {
-            shared: false,
-            y: {
-                formatter: function (val) {
-                    return (val / 1000000).toFixed(0)
-                }
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+            title: {
+                text: 'Day'
             }
+        },
+        yaxis: {
+            title: {
+                text: 'Net change'
+            },
+            min: 5,
+            max: 40
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'right',
+            floating: true,
+            offsetY: -25,
+            offsetX: -5
         }
-    };
+    }
+
     const seriescolumnchart = [
         {
-            name: 'Eanings this month',
-            data: [{ x: '05/06/2014', y: 54 }, { x: '05/08/2014', y: 17 }, { x: '05/28/2014', y: 26 }],
+            name: "High - 2013",
+            data: [28, 29, 33, 36, 32, 32, 33]
         },
-        {
-            name: 'Expense this month',
-            data: [{ x: '05/06/2014', y: 4 }, { x: '05/08/2014', y: 55 }, { x: '05/28/2014', y: 236 }],
-        },
-        {
-            name: 'Expense this month 1',
-            data: [{ x: '05/06/2014', y: 541 }, { x: '05/08/2014', y: 417 }, { x: '05/28/2014', y: 226 }],
-        },
+        // {
+        //     name: "Low - 2013",
+        //     data: [12, 11, 14, 18, 17, 13, 13]
+        // }
+        // {
+        //     name: 'Eanings this month',
+        //     data: [{ x: '05/06/2014', y: 54 }, { x: '05/08/2014', y: 17 }, { x: '05/28/2014', y: 26 }],
+        // },
+        // {
+        //     name: 'Expense this month',
+        //     data: [{ x: '05/06/2014', y: 4 }, { x: '05/08/2014', y: 55 }, { x: '05/28/2014', y: 236 }],
+        // },
+        // {
+        //     name: 'Expense this month 1',
+        //     data: [{ x: '05/06/2014', y: 541 }, { x: '05/08/2014', y: 417 }, { x: '05/28/2014', y: 226 }],
+        // },
     ];
 
     return (
@@ -118,7 +134,7 @@ const SalesOverview = () => {
             <Chart
                 options={optionscolumnchart}
                 series={seriescolumnchart}
-                type="area"
+                type="line"
                 height="370px"
             />
         </DashboardCard>

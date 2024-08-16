@@ -48,12 +48,12 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
             <Box>
               <Typography variant="subtitle1"
                           fontWeight={600} component="label" htmlFor='username' mb="5px">Username</Typography>
-              <CustomTextField id="username" variant="outlined" fullWidth onChange={e => setUserName(e.target.value)}/>
+              <CustomTextField id="username" variant="outlined" fullWidth onChange={e => setUserName(e.target.value)} required/>
             </Box>
             <Box mt="25px">
               <Typography variant="subtitle1"
                           fontWeight={600} component="label" htmlFor='password' mb="5px">Password</Typography>
-              <CustomTextField id="password" type="password" variant="outlined" fullWidth onChange={e => setPassword(e.target.value)}/>
+              <CustomTextField id="password" type="password" variant="outlined" fullWidth onChange={e => setPassword(e.target.value)} required/>
             </Box>
             <Stack justifyContent="space-between" direction="row" alignItems="center" my={2}>
               <FormGroup>
