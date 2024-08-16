@@ -8,3 +8,12 @@ services:
       MYSQL_PASSWORD: password
     ports:
       - "3306:3306"
+
+  api:
+    build:
+        context: ./api/
+    container_name: api-backend
+    depends_on:
+      - db
+    ports:
+      - 8000:8000
