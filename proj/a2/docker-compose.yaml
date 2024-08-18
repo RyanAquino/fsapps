@@ -15,11 +15,11 @@ services:
     depends_on:
       - db
     ports:
-      - 8000:8000
+      - 8443:8000
 
   web:
     environment:
-      REACT_APP_API_URL: "https://0.0.0.0:8000"
+      REACT_APP_API_URL: "https://0.0.0.0:8443"
       SSL_CRT_FILE: "./certs/cert.pem"
       SSL_KEY_FILE: "./certs/key.pem"
     build:
