@@ -91,16 +91,11 @@ class Services(containers.DeclarativeContainer):
         CryptContext, schemes=["bcrypt"], deprecated="auto"
     )
 
-    oauth2_scheme = providers.Singleton(
-        OAuth2PasswordBearer, tokenUrl="api/v1/auth/login"
-    )
-
     user_service = providers.Factory(
         UserService,
         user_repository=repositories.user_repository,
         config=config,
         pwd_context=pwd_context,
-        oauth2_scheme=oauth2_scheme,
         user_schema=UserDBSchema,
     )
 

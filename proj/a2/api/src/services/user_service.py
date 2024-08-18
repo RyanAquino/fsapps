@@ -2,10 +2,11 @@ from datetime import datetime, timedelta, timezone
 
 from dependency_injector import providers
 from fastapi import HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
 from jose import jwt
 from sqlalchemy.exc import IntegrityError
 
-from api.src.models.requests.user_token import LoginTokenRequest, RegisterUserRequest
+from api.src.models.requests.user_token import RegisterUserRequest
 from api.src.models.response.user_token import TokenResponse
 from api.src.repositories.user_repository import UserNotFoundError, UserRepository
 from api.src.schemas.schemas import UserDBSchema
@@ -17,13 +18,11 @@ class UserService:
         user_repository: UserRepository,
         config: providers.Configuration,
         pwd_context,
-        oauth2_scheme,
         user_schema: UserDBSchema,
     ):
         self._repository = user_repository
         self.config = config
         self.pwd_context = pwd_context
-        self.oauth2_scheme = oauth2_scheme
         self.user_schema = user_schema
 
     def register_user(self, request_payload: RegisterUserRequest) -> UserDBSchema:
@@ -37,11 +36,11 @@ class UserService:
                 status_code=status.HTTP_409_CONFLICT,
                 detail=f"User {request_payload.username} already exists.",
             )
-        user_schema = self.user_schema.from_orm(user)
+        user_schema = self.user_schema.model_validate(user)
 
         return user_schema
 
-    def login_user(self, request_payload: LoginTokenRequest) -> TokenResponse:
+    def login_user(self, request_payload: OAuth2PasswordRequestForm) -> TokenResponse:
         try:
             user = self._repository.get_by_username(request_payload.username)
         except UserNotFoundError:
@@ -57,11 +56,15 @@ class UserService:
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-        user_schema = self.user_schema.from_orm(user)
+        user_schema = self.user_schema.model_validate(user)
         user_schema.exp = datetime.now(timezone.utc) + timedelta(
             minutes=self.config.get("token_exp_minutes")
         )
-        user = user_schema.dict()
-        encoded_jwt = jwt.encode(user, self.config.get("secret_key"), algorithm="HS256")
+        user = user_schema.model_dump()
+        encoded_jwt = jwt.encode(
+            user,
+            self.config.get("jwt_secret_key"),
+            algorithm=self.config.get("jwt_algorithm"),
+        )
 
         return TokenResponse(access_token=encoded_jwt)

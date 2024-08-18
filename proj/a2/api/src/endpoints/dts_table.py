@@ -2,6 +2,7 @@ from dependency_injector.wiring import Provide, inject
 from fastapi import APIRouter, Depends
 
 from api.src.container import Application
+from api.src.security import oauth2_scheme
 from api.src.services.dts_tables_service import DTSTablesService
 
 router = APIRouter()
@@ -11,6 +12,7 @@ router = APIRouter()
 @inject
 def dts_table(
     table_name: str,
+    _: str = Depends(oauth2_scheme),
     dts_tables_service: DTSTablesService = Depends(
         Provide[Application.services.dts_tables_service]
     ),
