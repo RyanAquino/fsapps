@@ -1,4 +1,8 @@
-FROM python:3.12
+FROM python:3.12-alpine
+
+RUN apk update
+
+RUN apk add gcc musl-dev mariadb-connector-c-dev
 
 WORKDIR /a2/api
 

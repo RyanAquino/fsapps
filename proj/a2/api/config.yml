@@ -4,5 +4,7 @@ application:
   debug: True
   token_exp_minutes: 30
   secret_key: 8837fccb8a19b9a6e942bee4ccc78c6c9791c60f21ee1391219c9d233af763bb
+  ssl_cert: "./api/certs/cert.pem"
+  ssl_key: "./api/certs/key.pem"
 database:
   dsn: "mariadb+mariadbconnector://user:password@db:3306/mydatabase"

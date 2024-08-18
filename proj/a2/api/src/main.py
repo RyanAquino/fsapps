@@ -31,9 +31,12 @@ app = create_app()
 
 if __name__ == "__main__":
     app_config = app.container.config.application
+
     uvicorn.run(
         "api.src.main:app",
         host=app_config.host(),
         port=app_config.port(),
         reload=app_config.debug(),
+        ssl_certfile=app_config.ssl_cert(),
+        ssl_keyfile=app_config.ssl_key(),
     )

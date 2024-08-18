@@ -1,4 +1,4 @@
-FROM node:20.16
+FROM node:20.16-alpine
 
 LABEL authors="ryan"
 

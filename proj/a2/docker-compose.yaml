@@ -12,18 +12,21 @@ services:
   api:
     build:
         context: ./api/
-    container_name: api-backend
     depends_on:
       - db
     ports:
       - 8000:8000
 
   web:
-    container_name: web-frontend
     environment:
-      REACT_APP_API_URL: "http://localhost:8000"
+      REACT_APP_API_URL: "https://0.0.0.0:8000"
+      SSL_CRT_FILE: "./certs/cert.pem"
+      SSL_KEY_FILE: "./certs/key.pem"
     build:
       context: ./web/
     ports:
-      - 3000:3000
+      - 443:3000
+    depends_on:
+      - api
+      - db
     stdin_open: true
