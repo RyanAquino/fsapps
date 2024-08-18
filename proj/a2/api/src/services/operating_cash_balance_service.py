@@ -11,18 +11,22 @@ class OperatingCashBalanceService(DTSBaseService):
 
     def get_data(self, filters):
         data = self._repository.get_all()
+
+        if not data:
+            return []
+
         serialized_items = [
             OperatingCashBalanceDBSchema.model_validate(item) for item in data
         ]
         json_data = [item.model_dump() for item in serialized_items]
         df = pd.DataFrame(json_data)
-
         net_change_df = self.calculate_day_net_change(df)
         df = df.merge(
             net_change_df[["net_change", "record_date"]], how="inner", on="record_date"
         )
 
         json_data = df.to_dict(orient="records")
+
         return json_data
 
     @staticmethod
