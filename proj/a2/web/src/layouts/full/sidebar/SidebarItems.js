@@ -20,9 +20,7 @@ const SidebarItems = () => {
             // {/********If Sub Menu**********/}
             /* eslint no-else-return: "off" */
           } else {
-            return (
-              <NavItem item={item} key={item.id} pathDirect={pathDirect} />
-            );
+            return <NavItem item={item} key={item.id} pathDirect={pathDirect} />;
           }
         })}
       </List>

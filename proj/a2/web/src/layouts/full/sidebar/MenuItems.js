@@ -1,5 +1,11 @@
 import {
-  IconAperture, IconCopy, IconLayoutDashboard, IconLogin, IconMoodHappy, IconTypography, IconUserPlus
+  IconAperture,
+  IconCopy,
+  IconLayoutDashboard,
+  IconLogin,
+  IconMoodHappy,
+  IconTypography,
+  IconUserPlus,
 } from '@tabler/icons';
 
 import { uniqueId } from 'lodash';

@@ -10,13 +10,12 @@ import ProductPerformance from './components/ProductPerformance';
 import Blog from './components/Blog';
 import MonthlyEarnings from './components/MonthlyEarnings';
 
-
 const Dashboard = () => {
   return (
     <PageContainer title="Dashboard" description="this is Dashboard">
       <Box>
         <Grid container spacing={3}>
-          <Grid item xs={12} lg={8}>
+          <Grid item xs={12} lg={6}>
             <SalesOverview />
           </Grid>
           {/*<Grid item xs={12} lg={4}>*/}

@@ -1,7 +1,6 @@
-import React, { Suspense } from "react";
+import React, { Suspense } from 'react';
 
-const Loadable = (Component) => (props) =>
-(
+const Loadable = (Component) => (props) => (
   <Suspense>
     <Component {...props} />
   </Suspense>

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { styled, Container, Box } from '@mui/material';
 import { Outlet } from 'react-router-dom';
-
 
 import Header from './header/Header';
 import Sidebar from './sidebar/Sidebar';
@@ -22,38 +21,39 @@ const PageWrapper = styled('div')(() => ({
 }));
 
 const FullLayout = () => {
-
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   // const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
 
   return (
-    <MainWrapper
-      className='mainwrapper'
-    >
+    <MainWrapper className="mainwrapper">
       {/* ------------------------------------------- */}
       {/* Sidebar */}
       {/* ------------------------------------------- */}
-      <Sidebar isSidebarOpen={isSidebarOpen}
+      <Sidebar
+        isSidebarOpen={isSidebarOpen}
         isMobileSidebarOpen={isMobileSidebarOpen}
-        onSidebarClose={() => setMobileSidebarOpen(false)} />
+        onSidebarClose={() => setMobileSidebarOpen(false)}
+      />
       {/* ------------------------------------------- */}
       {/* Main Wrapper */}
       {/* ------------------------------------------- */}
-      <PageWrapper
-        className="page-wrapper"
-      >
+      <PageWrapper className="page-wrapper">
         {/* ------------------------------------------- */}
         {/* Header */}
         {/* ------------------------------------------- */}
-        <Header toggleSidebar={() => setSidebarOpen(!isSidebarOpen)} toggleMobileSidebar={() => setMobileSidebarOpen(true)} />
+        <Header
+          toggleSidebar={() => setSidebarOpen(!isSidebarOpen)}
+          toggleMobileSidebar={() => setMobileSidebarOpen(true)}
+        />
         {/* ------------------------------------------- */}
         {/* PageContent */}
         {/* ------------------------------------------- */}
-        <Container sx={{
-          paddingTop: "20px",
-          maxWidth: '1200px',
-        }}
+        <Container
+          sx={{
+            paddingTop: '20px',
+            maxWidth: '1200px',
+          }}
         >
           {/* ------------------------------------------- */}
           {/* Page Route */}

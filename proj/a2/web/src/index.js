@@ -9,5 +9,5 @@ root.render(
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </Suspense>
+  </Suspense>,
 );

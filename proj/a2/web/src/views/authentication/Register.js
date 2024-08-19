@@ -48,7 +48,7 @@ const Register2 = () => (
                   <Typography color="textSecondary" variant="h6" fontWeight="400">
                     Already have an Account?
                   </Typography>
-                  <Typography 
+                  <Typography
                     component={Link}
                     to="/auth/login"
                     fontWeight="500"

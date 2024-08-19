@@ -3,8 +3,7 @@ import Logo from '../shared/logo/Logo';
 import SidebarItems from './SidebarItems';
 
 const Sidebar = (props) => {
-
-  const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"));
+  const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'));
 
   const sidebarWidth = '270px';
 
@@ -51,7 +50,6 @@ const Sidebar = (props) => {
               <SidebarItems />
               {/*<Upgrade />*/}
             </Box>
-            
           </Box>
         </Drawer>
       </Box>
