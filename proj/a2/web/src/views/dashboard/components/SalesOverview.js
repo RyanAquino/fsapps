@@ -68,36 +68,31 @@ const SalesOverview = () => {
         blur: 10,
         opacity: 0.2,
       },
-      zoom: {
-        enabled: false,
-      },
-      toolbar: {
-        show: false,
-      },
     },
     colors: [primary, secondary],
     dataLabels: {
-      enabled: true,
+      enabled: false,
+    },
+    markers: {
+      size: 1,
     },
     stroke: {
       curve: 'smooth',
     },
     title: {
-        text: 'Daily net change',
-        align: 'left'
+      text: 'Daily net change',
+      align: 'left'
     },
     grid: {
       borderColor: '#e7e7e7',
       row: {
-        colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns
+        colors: ['#f3f3f3', 'transparent'],
         opacity: 0.5,
       },
     },
-    markers: {
-      size: 1,
-    },
     xaxis: {
       categories: tableData.map((i) => i['date']),
+      type: 'datetime',
       title: {
         text: 'Day',
       },
@@ -124,11 +119,12 @@ const SalesOverview = () => {
       data: tableData.map((i) => i['net_change']),
     },
   ];
+
   return (
     <DashboardCard
       title="Operating Cash Balance"
     >
-      <Chart options={optionscolumnchart} series={seriescolumnchart} type="line" height="270px" />
+      <Chart options={optionscolumnchart} series={seriescolumnchart} type="line" height="270px"/>
     </DashboardCard>
   );
 };
