@@ -19,7 +19,7 @@ const SalesOverview = () => {
     }
 
     const fetchTableData = async () =>
-      await dtsTable(token, 'operating_cash_balance').catch((err) => {
+      await dtsTable(token, 'deposits_withdrawals_operating_cash_balance').catch((err) => {
         console.log(err);
         if (err.response.status === 401) {
           navigate(loginRoute);
@@ -35,7 +35,9 @@ const SalesOverview = () => {
         }
         dates.push(item['record_date']);
         data.push({
-          net_change: item['net_change'],
+          deposits: item['transaction_today_amt_deposits'],
+          withdrawals: item['transaction_today_amt_withdrawals'],
+          total: item['total_transaction_today'],
           date: item['record_date'],
         });
       }
@@ -54,6 +56,7 @@ const SalesOverview = () => {
   const theme = useTheme();
   const primary = theme.palette.primary.main;
   const secondary = theme.palette.secondary.main;
+  const tertiary = theme.palette.error.main;
 
   // chart
   const optionscolumnchart = {
@@ -68,8 +71,11 @@ const SalesOverview = () => {
         blur: 10,
         opacity: 0.2,
       },
+      // toolbar:{
+      //   offsetX: '100%',
+      // }
     },
-    colors: [primary, secondary],
+    colors: [primary, secondary, tertiary],
     dataLabels: {
       enabled: false,
     },
@@ -78,10 +84,6 @@ const SalesOverview = () => {
     },
     stroke: {
       curve: 'smooth',
-    },
-    title: {
-      text: 'Daily net change',
-      align: 'left'
     },
     grid: {
       borderColor: '#e7e7e7',
@@ -101,30 +103,40 @@ const SalesOverview = () => {
       title: {
         text: 'Net change',
       },
-      min: Math.min(...tableData.map((i) => i['net_change'])),
-      max: Math.max(...tableData.map((i) => i['net_change'])),
+      min: Math.min(
+        ...tableData.map((i) => i['deposits']),
+        ...tableData.map((i) => i['withdrawals']),
+        ...tableData.map((i) => i['total']),
+      ),
+      max: Math.max(
+        ...tableData.map((i) => i['deposits']),
+        ...tableData.map((i) => i['withdrawals']),
+        ...tableData.map((i) => i['total']),
+      ),
     },
     legend: {
-      position: 'top',
-      horizontalAlign: 'right',
-      floating: true,
-      offsetY: -25,
-      offsetX: -5,
+      position: 'bottom',
     },
   };
 
   const seriescolumnchart = [
     {
-      name: 'Net Change',
-      data: tableData.map((i) => i['net_change']),
+      name: 'Total Deposits',
+      data: tableData.map((i) => i['deposits']),
+    },
+    {
+      name: 'Total Withdrawals',
+      data: tableData.map((i) => i['withdrawals']),
+    },
+    {
+      name: 'Total Sum',
+      data: tableData.map((i) => i['total']),
     },
   ];
 
   return (
-    <DashboardCard
-      title="Operating Cash Balance"
-    >
-      <Chart options={optionscolumnchart} series={seriescolumnchart} type="line" height="270px"/>
+    <DashboardCard title="Deposits and Withdrawals of Operating Cash">
+      <Chart options={optionscolumnchart} series={seriescolumnchart} type="line" height="270px" />
     </DashboardCard>
   );
 };
