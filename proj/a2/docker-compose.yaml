@@ -35,6 +35,6 @@ services:
     build:
       context: ../a1/api/
     environment:
-      conn: 'mariadb+mariadbconnector://user:password@db:3306/mydatabase'
+      conn: 'mariadb+pymysql://user:password@db:3306/mydatabase'
     depends_on:
       - db

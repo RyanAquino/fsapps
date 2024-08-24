@@ -3,6 +3,7 @@ import time
 from pytz import timezone
 import requests
 import schedule
+from loguru import logger
 from sqlalchemy.orm import Session, sessionmaker
 from models import (
     Base,
@@ -35,7 +36,7 @@ def get_data_per_date(table: str, date: str, date_orig=None, results=None):
     base_url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service"
     endpoint = f"v1/accounting/dts/{table}"
     param = f"filter=record_date:{date}"
-    print(f"Sending request: {base_url}/{endpoint}?{param}")
+    logger.info(f"Sending request: {base_url}/{endpoint}?{param}")
     response = requests.get(f"{base_url}/{endpoint}?{param}", timeout=60).json()
 
     results += response.get("data")
@@ -61,11 +62,11 @@ def insert(data_obj_list: list, session: Session):
     try:
         session.bulk_save_objects(data_obj_list)
         session.commit()
-        print("Done!! Saved and committed changes to database.")
+        logger.info("Done!! Saved and committed changes to database.")
 
     except Exception as error:
         session.rollback()
-        print(error)
+        logger.error(error)
         raise error
 
 
@@ -149,9 +150,10 @@ def job(session: Session):
         #
 
         if exists:
-            print(f"Skipping!! data exists for date {record_date} on {table_lowered}.")
+            logger.warning(f"Skipping!! data exists for date {record_date} on {table_lowered}.")
             continue
 
+        # record_date = f"gt:2024-01-01"
         if last_record_date := get_last_record_date(table_obj, session):
             record_date = f"gt:{last_record_date}"
         else:
@@ -167,7 +169,7 @@ def job(session: Session):
             table_model = dts_tables[item.get("table_nm")]
             data_objs.append(table_model(**item))
 
-        print(f"Inserting {table_name} to database for date {record_date}.")
+        logger.info(f"Inserting {table_name} to database for date {record_date}.")
         insert(data_objs, session)
 
 
@@ -189,7 +191,7 @@ def main(session: Session):
 
     while True:
         next_run = schedule.idle_seconds()
-        print(f"Time till next run {time.strftime('%H:%M:%S', time.gmtime(next_run))}.")
+        logger.info(f"Time till next run {time.strftime('%H:%M:%S', time.gmtime(next_run))}.")
 
         if next_run > 0:
             time.sleep(next_run)
