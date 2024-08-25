@@ -15,17 +15,17 @@ class UserDBSchema(BaseModel):
 
 class DTSBaseDBSchema(BaseModel):
     id: int
-    record_date: str
-    table_nbr: str
-    table_nm: str
+    record_date: Optional[str] = None
+    table_nbr: Optional[str] = None
+    table_nm: Optional[str] = None
     sub_table_name: Optional[str] = None
-    src_line_nbr: str
-    record_fiscal_year: int
-    record_fiscal_quarter: int
-    record_calendar_year: int
-    record_calendar_quarter: int
-    record_calendar_month: int
-    record_calendar_day: int
+    src_line_nbr: Optional[str] = None
+    record_fiscal_year: Optional[int] = None
+    record_fiscal_quarter: Optional[int] = None
+    record_calendar_year: Optional[int] = None
+    record_calendar_quarter: Optional[int] = None
+    record_calendar_month: Optional[int] = None
+    record_calendar_day: Optional[int] = None
 
     class Config:
         from_attributes = True
@@ -59,13 +59,13 @@ class DebtSubjectToLimitDBSchema(DTSBaseDBSchema):
 
 
 class DepositsWithdrawalsOperatingCashDBSchema(DTSBaseDBSchema):
-    account_type: str
-    transaction_type: str
-    transaction_catg: str
-    transaction_catg_desc: str
-    transaction_today_amt: str
-    transaction_mtd_amt: str
-    transaction_fytd_amt: str
+    account_type: Optional[str] = None
+    transaction_type: Optional[str] = None
+    transaction_catg: Optional[str] = None
+    transaction_catg_desc: Optional[str] = None
+    transaction_today_amt: Optional[str] = None
+    transaction_mtd_amt: Optional[str] = None
+    transaction_fytd_amt: Optional[str] = None
 
 
 class FederalTaxDepositsDBSchema(DTSBaseDBSchema):

@@ -6,8 +6,20 @@ class DepositsWithdrawalsOperatingCashBalanceRepository(DTSTablesBaseRepository)
     name = "deposits_withdrawals_operating_cash_balance"
 
     def get_all(self):
+        _, fields = self.generate_filter()
         with self.session_factory() as session:
-            return session.query(Deposits_Withdrawals_Operating_Cash).all()
+            columns = [getattr(Deposits_Withdrawals_Operating_Cash, field) for field in fields]
+            q = session.query(*columns)
+            return q.all()
 
     def generate_filter(self):
-        pass
+        query_filter = {}
+
+        return query_filter, (
+            "id",
+            "transaction_type",
+            "transaction_catg",
+            "account_type",
+            "record_date",
+            "transaction_today_amt"
+        )

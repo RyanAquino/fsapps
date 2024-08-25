@@ -19,7 +19,7 @@ class DepositsWithdrawalsOperatingCashBalanceService(DTSBaseService):
             DepositsWithdrawalsOperatingCashDBSchema.model_validate(item)
             for item in data
         ]
-        json_data = [item.model_dump() for item in serialized_items]
+        json_data = [item.model_dump(exclude_none=True) for item in serialized_items]
 
         df = pd.DataFrame(json_data)
         daily_deposit_withdrawal_totals = (
