@@ -1,20 +1,24 @@
 """DTS Script main module."""
+
 import time
-from pytz import timezone
+
 import requests
 import schedule
 from loguru import logger
+from pytz import timezone
 from sqlalchemy.orm import Session, sessionmaker
+
+from aaii_live_scraper import main as aaii_live_job_scraper
 from models import (
-    Base,
-    Operating_Cash_Balance,
-    Deposits_Withdrawals_Operating_Cash,
-    Public_Debt_Transactions,
     Adjustment_Public_Debt_Transactions_Cash_Basis,
+    Base,
     Debt_Subject_To_Limit,
-    Inter_Agency_Tax_Transfers,
-    Income_Tax_Refunds_Issued,
+    Deposits_Withdrawals_Operating_Cash,
     Federal_Tax_Deposits,
+    Income_Tax_Refunds_Issued,
+    Inter_Agency_Tax_Transfers,
+    Operating_Cash_Balance,
+    Public_Debt_Transactions,
     Short_Term_Cash_Investments,
     init_db,
 )
@@ -120,7 +124,7 @@ def get_first_record_date(table: str) -> str:
     return result[0]["record_date"] if len(result) == 1 else None
 
 
-def job(session: Session):
+def dts_scraper(session: Session):
     """
     Main job that retrieves data for all DTS tables.
 
@@ -150,7 +154,9 @@ def job(session: Session):
         #
 
         if exists:
-            logger.warning(f"Skipping!! data exists for date {record_date} on {table_lowered}.")
+            logger.warning(
+                f"Skipping!! data exists for date {record_date} on {table_lowered}."
+            )
             continue
 
         # record_date = f"gt:2024-01-01"
@@ -182,16 +188,20 @@ def main(session: Session):
     """
     run_time = "16:01"
     time_zone = timezone("America/New_York")
+    jobs = [dts_scraper, aaii_live_job_scraper]
 
-    schedule.every().monday.at(run_time, time_zone).do(job, session)
-    schedule.every().tuesday.at(run_time, time_zone).do(job, session)
-    schedule.every().wednesday.at(run_time, time_zone).do(job, session)
-    schedule.every().thursday.at(run_time, time_zone).do(job, session)
-    schedule.every().friday.at(run_time, time_zone).do(job, session)
+    for item in jobs:
+        schedule.every().monday.at(run_time, time_zone).do(item, session)
+        schedule.every().tuesday.at(run_time, time_zone).do(item, session)
+        schedule.every().wednesday.at(run_time, time_zone).do(item, session)
+        schedule.every().thursday.at(run_time, time_zone).do(item, session)
+        schedule.every().friday.at(run_time, time_zone).do(item, session)
 
     while True:
         next_run = schedule.idle_seconds()
-        logger.info(f"Time till next run {time.strftime('%H:%M:%S', time.gmtime(next_run))}.")
+        logger.info(
+            f"Time till next run {time.strftime('%H:%M:%S', time.gmtime(next_run))}."
+        )
 
         if next_run > 0:
             time.sleep(next_run)

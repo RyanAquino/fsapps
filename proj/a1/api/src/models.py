@@ -1,9 +1,10 @@
 """DTS database Model definitions."""
-from sqlalchemy import Column, Integer, String, create_engine
-from sqlalchemy.orm import declarative_base
-from dotenv import load_dotenv
+
 import os
 
+from dotenv import load_dotenv
+from sqlalchemy import Column, Float, Integer, String, create_engine
+from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
 
@@ -131,6 +132,7 @@ class Debt_Subject_To_Limit(Base):
     record_calendar_month = Column(String(200), nullable=True)
     record_calendar_day = Column(String(200), nullable=True)
 
+
 class Inter_Agency_Tax_Transfers(Base):
     # pylint:disable=too-few-public-methods,invalid-name
     """DTS Table 6."""
@@ -152,6 +154,7 @@ class Inter_Agency_Tax_Transfers(Base):
     record_calendar_quarter = Column(String(200), nullable=True)
     record_calendar_month = Column(String(200), nullable=True)
     record_calendar_day = Column(String(200), nullable=True)
+
 
 class Income_Tax_Refunds_Issued(Base):
     # pylint:disable=too-few-public-methods,invalid-name
@@ -226,11 +229,25 @@ class Short_Term_Cash_Investments(Base):
     record_calendar_day = Column(String(200), nullable=True)
 
 
+class AAISentiment(Base):
+    # pylint:disable=too-few-public-methods,invalid-name
+    """AAI Sentiment model table."""
+    __tablename__ = "aai_sentiment"
 
-
-
-def configure():
-    load_dotenv()
+    id = Column(Integer, primary_key=True)
+    record_date = Column(String(200), nullable=True)
+    bullish = Column(Float(), nullable=True)
+    neutral = Column(Float(), nullable=True)
+    bearish = Column(Float(), nullable=True)
+    total = Column(Float(), nullable=True)
+    bullish_eight_week_mov_avg = Column(Float(), nullable=True)
+    bull_bear_spread = Column(Float(), nullable=True)
+    bullish_avg = Column(Float(), nullable=True)
+    bull_pos_avg_std_dev = Column(Float(), nullable=True)
+    bull_neg_avg_std_dev = Column(Float(), nullable=True)
+    s_and_p_weekly_high = Column(Float(), nullable=True)
+    s_and_p_weekly_low = Column(Float(), nullable=True)
+    s_and_p_weekly_close = Column(Float(), nullable=True)
 
 
 def init_db():
@@ -238,12 +255,12 @@ def init_db():
     Initialize DB engine and tables.
     :return: DB engine
     """
-    configure()
+    load_dotenv()
     # Returns `default_value` if the key doesn't exist
-    proj = os.environ.get('working_env', 'local')
-    conn = str(os.getenv('conn'))
-    if proj == 'remote':
-        with open('/run/secrets/db_conn') as f:
+    proj = os.environ.get("working_env", "local")
+    conn = str(os.getenv("conn"))
+    if proj == "remote":
+        with open("/run/secrets/db_conn") as f:
             conn = f.readlines()[0]
 
     engine = create_engine(conn)
