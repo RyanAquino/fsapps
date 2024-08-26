@@ -24,3 +24,15 @@ export const dtsTable = (token, dtsTableName) => {
     })
     .then(({ data }) => data);
 };
+
+
+export const sentimentSurvey = (token) => {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  return axios
+      .get(`${API_URL}/api/v1/sentiment-survey/`, {
+        headers: headers,
+      })
+      .then(({ data }) => data);
+};

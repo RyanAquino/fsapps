@@ -6,7 +6,7 @@ import Chart from 'react-apexcharts';
 import { dtsTable } from '../../../api/utils';
 import { useNavigate } from 'react-router-dom';
 
-const SalesOverview = () => {
+const DTSTables = () => {
   const [tableData, setTableData] = useState([]);
   const navigate = useNavigate();
   const loginRoute = '/auth/login';
@@ -101,7 +101,7 @@ const SalesOverview = () => {
     },
     yaxis: {
       title: {
-        text: 'Net change',
+        text: 'USD',
       },
       min: Math.min(
         ...tableData.map((i) => i['deposits']),
@@ -141,4 +141,4 @@ const SalesOverview = () => {
   );
 };
 
-export default SalesOverview;
+export default DTSTables;

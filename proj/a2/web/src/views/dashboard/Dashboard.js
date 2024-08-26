@@ -3,12 +3,13 @@ import { Grid, Box } from '@mui/material';
 import PageContainer from 'src/components/container/PageContainer';
 
 // components
-import SalesOverview from './components/SalesOverview';
+import DTSTables from './components/DTSTables';
 import YearlyBreakup from './components/YearlyBreakup';
 import RecentTransactions from './components/RecentTransactions';
 import ProductPerformance from './components/ProductPerformance';
 import Blog from './components/Blog';
 import MonthlyEarnings from './components/MonthlyEarnings';
+import SentimentSurvey from "./components/SentimentSurvey";
 
 const Dashboard = () => {
   return (
@@ -16,8 +17,11 @@ const Dashboard = () => {
       <Box>
         <Grid container spacing={3}>
           <Grid item xs={12} lg={12}>
-            <SalesOverview />
+            <DTSTables />
           </Grid>
+            <Grid item xs={12} lg={12}>
+                <SentimentSurvey />
+            </Grid>
           {/*<Grid item xs={12} lg={4}>*/}
           {/*  <Grid container spacing={3}>*/}
           {/*    <Grid item xs={12}>*/}
