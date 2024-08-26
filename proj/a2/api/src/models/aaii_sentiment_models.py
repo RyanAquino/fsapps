@@ -1,12 +1,12 @@
-from sqlalchemy import Column, Integer, Float, String
+from sqlalchemy import Column, Float, Integer, String
 
 from api.src.database import Base
 
 
-class AAISentiment(Base):
+class AAIISentiment(Base):
     # pylint:disable=too-few-public-methods,invalid-name
     """DTS Table 1."""
-    __tablename__ = "aai_sentiment"
+    __tablename__ = "aaii_sentiment"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)

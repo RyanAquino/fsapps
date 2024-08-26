@@ -229,10 +229,10 @@ class Short_Term_Cash_Investments(Base):
     record_calendar_day = Column(String(200), nullable=True)
 
 
-class AAISentiment(Base):
+class AAIISentiment(Base):
     # pylint:disable=too-few-public-methods,invalid-name
     """AAI Sentiment model table."""
-    __tablename__ = "aai_sentiment"
+    __tablename__ = "aaii_sentiment"
 
     id = Column(Integer, primary_key=True)
     record_date = Column(String(200), nullable=True)

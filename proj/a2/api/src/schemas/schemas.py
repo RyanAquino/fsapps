@@ -1,6 +1,6 @@
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 
 class UserDBSchema(BaseModel):
@@ -108,3 +108,27 @@ class ShortTermCashInvestmentsDBSchema(DTSBaseDBSchema):
     depositary_type_b_amt: str
     depositary_type_c_amt: str
     total_amt: str
+
+
+class AAIISentimentDBSchema(BaseModel):
+    id: int
+    record_date: Optional[str] = None
+    bullish: Optional[float] = None
+    neutral: Optional[float] = None
+    bearish: Optional[float] = None
+    total: Optional[float] = None
+    bullish_eight_week_mov_avg: Optional[float] = None
+    bull_bear_spread: Optional[float] = None
+    bullish_avg: Optional[float] = None
+    bull_pos_avg_std_dev: Optional[float] = None
+    bull_neg_avg_std_dev: Optional[float] = None
+    s_and_p_weekly_high: Optional[float] = None
+    s_and_p_weekly_low: Optional[float] = None
+    s_and_p_weekly_close: Optional[float] = None
+
+    class Config:
+        from_attributes = True
+
+    @field_validator("bullish", "neutral", "bearish", "total")
+    def round_values(cls, v):
+        return round(v, 2)

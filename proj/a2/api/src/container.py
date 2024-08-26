@@ -1,8 +1,8 @@
 from dependency_injector import containers, providers
-from fastapi.security import OAuth2PasswordBearer
 from passlib.context import CryptContext
 
 from api.src.database import Database
+from api.src.repositories.aaii_sentiment_repository import AAIISentimentRepository
 from api.src.repositories.adjustment_public_debt_transactions_cash_basis_repository import (
     AdjustmentPublicDebtTransactionsCashBasisRepository,
 )
@@ -32,6 +32,7 @@ from api.src.repositories.short_term_cash_investments_repository import (
 )
 from api.src.repositories.user_repository import UserRepository
 from api.src.schemas.schemas import UserDBSchema
+from api.src.services.aaii_sentiment_service import AAIISentimentService
 from api.src.services.dts_tables_service import DTSTablesService
 from api.src.services.user_service import UserService
 
@@ -82,6 +83,11 @@ class Repositories(containers.DeclarativeContainer):
         session_factory=gateways.db.provided.session,
     )
 
+    aaii_sentiment_repository = providers.Factory(
+        AAIISentimentRepository,
+        session_factory=gateways.db.provided.session,
+    )
+
 
 class Services(containers.DeclarativeContainer):
     repositories = providers.DependenciesContainer()
@@ -112,6 +118,11 @@ class Services(containers.DeclarativeContainer):
             "public_debt_transactions": repositories.public_debt_transactions_repository,
             "short_term_cash_investments": repositories.short_term_cash_investments_repository,
         },
+    )
+
+    aaii_sentiment_service = providers.Factory(
+        AAIISentimentService,
+        aaii_sentiment_repository=repositories.aaii_sentiment_repository,
     )
 
 

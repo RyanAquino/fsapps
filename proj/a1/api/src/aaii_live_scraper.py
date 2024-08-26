@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from loguru import logger
 from sqlalchemy.orm import sessionmaker
 
-from models import AAISentiment, init_db
+from models import AAIISentiment, init_db
 
 
 def scrape_live_data(last_record_date: datetime):
@@ -59,7 +59,7 @@ def main(session):
     """
     logger.info("Scraping AAII.com")
     last_record = (
-        session.query(AAISentiment).order_by(AAISentiment.record_date.desc()).first()
+        session.query(AAIISentiment).order_by(AAIISentiment.record_date.desc()).first()
     )
     if last_record:
         last_record = datetime.strptime(last_record.record_date, "%Y-%m-%d %H:%M:%S")

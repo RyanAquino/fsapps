@@ -8,7 +8,9 @@ class DepositsWithdrawalsOperatingCashBalanceRepository(DTSTablesBaseRepository)
     def get_all(self):
         _, fields = self.generate_filter()
         with self.session_factory() as session:
-            columns = [getattr(Deposits_Withdrawals_Operating_Cash, field) for field in fields]
+            columns = [
+                getattr(Deposits_Withdrawals_Operating_Cash, field) for field in fields
+            ]
             q = session.query(*columns)
             return q.all()
 
@@ -21,5 +23,5 @@ class DepositsWithdrawalsOperatingCashBalanceRepository(DTSTablesBaseRepository)
             "transaction_catg",
             "account_type",
             "record_date",
-            "transaction_today_amt"
+            "transaction_today_amt",
         )
