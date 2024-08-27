@@ -7,7 +7,7 @@ from jose import jwt
 from sqlalchemy.exc import IntegrityError
 
 from api.src.models.requests.user_token import RegisterUserRequest
-from api.src.models.response.user_token import TokenResponse
+from api.src.models.response.user_token import TokenResponse, UserToken
 from api.src.repositories.user_repository import UserNotFoundError, UserRepository
 from api.src.schemas.schemas import UserDBSchema
 
@@ -56,13 +56,14 @@ class UserService:
                 headers={"WWW-Authenticate": "Bearer"},
             )
 
-        user_schema = self.user_schema.model_validate(user)
-        user_schema.exp = datetime.now(timezone.utc) + timedelta(
-            minutes=self.config.get("token_exp_minutes")
+        user_token_data = UserToken(
+            sub=user.username,
+            exp=datetime.now(timezone.utc)
+            + timedelta(minutes=self.config.get("token_exp_minutes")),
+            iat=datetime.now(timezone.utc),
         )
-        user = user_schema.model_dump()
         encoded_jwt = jwt.encode(
-            user,
+            user_token_data.model_dump(),
             self.config.get("jwt_secret_key"),
             algorithm=self.config.get("jwt_algorithm"),
         )

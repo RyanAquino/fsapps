@@ -127,7 +127,9 @@ class Services(containers.DeclarativeContainer):
 
 
 class Application(containers.DeclarativeContainer):
-    wiring_config = containers.WiringConfiguration(packages=["api.src.endpoints"])
+    wiring_config = containers.WiringConfiguration(
+        packages=["api.src.endpoints", "api.src.security"]
+    )
     config = providers.Configuration(yaml_files=["api/config.yml"])
 
     gateways = providers.Container(Gateways, config=config.database)
