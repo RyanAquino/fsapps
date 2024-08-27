@@ -11,7 +11,7 @@ router = APIRouter()
 @router.get("/")
 @inject
 def dts_table(
-    # _: str = Depends(oauth2_scheme),
+    _: str = Depends(oauth2_scheme),
     aaii_sentiment_service: AAIISentimentService = Depends(
         Provide[Application.services.aaii_sentiment_service]
     ),
