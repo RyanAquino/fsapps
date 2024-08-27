@@ -13,9 +13,9 @@ export const registerUser = (auth) => {
   return axios.post(`${API_URL}/api/v1/auth/register`, auth).then(({ data }) => data);
 };
 
-export const dtsTable = (token, dtsTableName) => {
+export const fetchDTSTables = (dtsTableName) => {
   const headers = {
-    Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
   };
   return axios
     .get(`${API_URL}/api/v1/dts-tables/`, {
@@ -25,14 +25,13 @@ export const dtsTable = (token, dtsTableName) => {
     .then(({ data }) => data);
 };
 
-
-export const sentimentSurvey = (token) => {
+export const fetchSentimentSurvey = () => {
   const headers = {
-    Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
   };
   return axios
-      .get(`${API_URL}/api/v1/sentiment-survey/`, {
-        headers: headers,
-      })
-      .then(({ data }) => data);
+    .get(`${API_URL}/api/v1/sentiment-survey/`, {
+      headers: headers,
+    })
+    .then(({ data }) => data);
 };

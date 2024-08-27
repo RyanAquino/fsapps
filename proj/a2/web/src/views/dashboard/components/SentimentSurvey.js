@@ -1,52 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useTheme } from '@mui/material/styles';
 import DashboardCard from '../../../components/shared/DashboardCard';
 import Chart from 'react-apexcharts';
-import {sentimentSurvey} from '../../../api/utils';
-import { useNavigate } from 'react-router-dom';
 
-const SentimentSurvey = () => {
-  const [tableData, setTableData] = useState([]);
-  const navigate = useNavigate();
-  const loginRoute = '/auth/login';
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      navigate(loginRoute);
-    }
-
-    const fetchTableData = async () =>
-      await sentimentSurvey(token).catch((err) => {
-        console.log(err);
-        if (err.response.status === 401) {
-          navigate(loginRoute);
-        }
-      });
-
-    fetchTableData().then((tableData) => {
-      let data = [];
-
-      for (const item of tableData) {
-        data.push({
-          record_date: item['record_date'],
-          bullish: item['bullish'],
-          neutral: item['neutral'],
-          bearish: item['bearish'],
-        });
-      }
-
-      setTableData(data);
-    });
-  }, []);
-
+const SentimentSurvey = ({ tableData }) => {
   const theme = useTheme();
   const primary = theme.palette.primary.main;
   const secondary = theme.palette.secondary.main;
   const tertiary = theme.palette.error.main;
-
-  console.log()
 
   const optionscolumnchart = {
     chart: {
@@ -86,12 +47,12 @@ const SentimentSurvey = () => {
       title: {
         text: 'Percentage',
       },
-      type: "string",
+      type: 'string',
       min: 0,
       max: Math.max(
-          ...tableData.map((i) => i['bearish'] ? i["bearish"] : 0),
-          ...tableData.map((i) => i['neutral'] ? i['neutral'] : 0),
-          ...tableData.map((i) => i['bullish'] ? i['bullish'] : 0),
+        ...tableData.map((i) => (i['bearish'] ? i['bearish'] : 0)),
+        ...tableData.map((i) => (i['neutral'] ? i['neutral'] : 0)),
+        ...tableData.map((i) => (i['bullish'] ? i['bullish'] : 0)),
       ),
     },
     legend: {
@@ -102,15 +63,15 @@ const SentimentSurvey = () => {
   const seriescolumnchart = [
     {
       name: 'Bullish',
-      data: tableData.map((i) => `${i['bullish']}%` ? i['bullish'] : 0),
+      data: tableData.map((i) => (`${i['bullish']}%` ? i['bullish'] : 0)),
     },
     {
       name: 'Neutral',
-      data: tableData.map((i) => i['neutral'] ? i['neutral'] : 0),
+      data: tableData.map((i) => (i['neutral'] ? i['neutral'] : 0)),
     },
     {
       name: 'Bearish',
-      data: tableData.map((i) => i['bearish'] ?  i['bearish'] : 0),
+      data: tableData.map((i) => (i['bearish'] ? i['bearish'] : 0)),
     },
   ];
 

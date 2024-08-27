@@ -1,50 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Select, MenuItem } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import DashboardCard from '../../../components/shared/DashboardCard';
 import Chart from 'react-apexcharts';
-import { dtsTable } from '../../../api/utils';
-import { useNavigate } from 'react-router-dom';
 
-const DTSTables = () => {
-  const [tableData, setTableData] = useState([]);
-  const navigate = useNavigate();
-  const loginRoute = '/auth/login';
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-
-    if (!token) {
-      navigate(loginRoute);
-    }
-
-    const fetchTableData = async () =>
-      await dtsTable(token, 'deposits_withdrawals_operating_cash_balance').catch((err) => {
-        console.log(err);
-        if (err.response.status === 401) {
-          navigate(loginRoute);
-        }
-      });
-    fetchTableData().then((tableData) => {
-      let data = [];
-      let dates = [];
-
-      for (const item of tableData) {
-        if (dates.includes(item['record_date'])) {
-          continue;
-        }
-        dates.push(item['record_date']);
-        data.push({
-          deposits: item['transaction_today_amt_deposits'],
-          withdrawals: item['transaction_today_amt_withdrawals'],
-          total: item['total_transaction_today'],
-          date: item['record_date'],
-        });
-      }
-      setTableData(data);
-    });
-  }, []);
-
+const DTSTables = ({ tableData }) => {
   // select
   const [month, setMonth] = useState('1');
 
