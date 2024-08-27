@@ -1,13 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
 import DashboardCard from '../../../components/shared/DashboardCard';
 import Chart from 'react-apexcharts';
+import { fetchSentimentSurvey } from '../../../api/utils';
 
-const SentimentSurvey = ({ tableData }) => {
+const SentimentSurvey = () => {
   const theme = useTheme();
   const primary = theme.palette.primary.main;
   const secondary = theme.palette.secondary.main;
   const tertiary = theme.palette.error.main;
+  const [tableData, setSentimentData] = useState([]);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      const sentimentData = await fetchSentimentSurvey();
+      setSentimentData(sentimentData);
+    };
+    fetchDashboardData().catch((err) => console.error(err));
+  }, []);
 
   const optionscolumnchart = {
     chart: {
