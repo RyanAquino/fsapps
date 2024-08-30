@@ -133,3 +133,17 @@ class AAIISentimentDBSchema(BaseModel):
     @field_validator("bullish", "neutral", "bearish", "total")
     def round_values(cls, v):
         return round(v, 2)
+
+
+class SPYFinanceDBSchema(BaseModel):
+    id: int
+    record_date: Optional[datetime.datetime] = None
+    open: Optional[float] = None
+    high: Optional[float] = None
+    low: Optional[float] = None
+    close: Optional[float] = None
+    adj_close: Optional[float] = None
+    volume: Optional[int] = None
+
+    class Config:
+        from_attributes = True

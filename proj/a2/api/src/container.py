@@ -30,10 +30,12 @@ from api.src.repositories.public_debt_transactions_repository import (
 from api.src.repositories.short_term_cash_investments_repository import (
     ShortTermCashInvestmentsRepository,
 )
+from api.src.repositories.spy_finance_repository import SPYFinanceRepository
 from api.src.repositories.user_repository import UserRepository
 from api.src.schemas.schemas import UserDBSchema
 from api.src.services.aaii_sentiment_service import AAIISentimentService
 from api.src.services.dts_tables_service import DTSTablesService
+from api.src.services.spy_finance_service import SPYFinanceService
 from api.src.services.user_service import UserService
 
 
@@ -87,6 +89,10 @@ class Repositories(containers.DeclarativeContainer):
         AAIISentimentRepository,
         session_factory=gateways.db.provided.session,
     )
+    spy_finance_repository = providers.Factory(
+        SPYFinanceRepository,
+        session_factory=gateways.db.provided.session,
+    )
 
 
 class Services(containers.DeclarativeContainer):
@@ -123,6 +129,10 @@ class Services(containers.DeclarativeContainer):
     aaii_sentiment_service = providers.Factory(
         AAIISentimentService,
         aaii_sentiment_repository=repositories.aaii_sentiment_repository,
+    )
+    spy_finance_service = providers.Factory(
+        SPYFinanceService,
+        spy_finance_repository=repositories.spy_finance_repository,
     )
 
 
