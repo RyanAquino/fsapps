@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 import requests
 from bs4 import BeautifulSoup
@@ -8,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from models import AAIISentiment, init_db
 
 
-def scrape_live_data(last_record_date: datetime):
+def scrape_live_data(last_record_date: Optional[datetime] = None):
     """
     Scrape live data of aaii.com bearish, bullish, neutral percentages.
 
@@ -61,10 +62,7 @@ def main(session):
     last_record = (
         session.query(AAIISentiment).order_by(AAIISentiment.record_date.desc()).first()
     )
-    if last_record:
-        last_record = datetime.strptime(last_record.record_date, "%Y-%m-%d %H:%M:%S")
-
-    records_data = scrape_live_data(last_record)
+    records_data = scrape_live_data(last_record.record_date)
 
     if records_data:
         session.bulk_save_objects(records_data)

@@ -1,3 +1,4 @@
+import datetime
 from typing import Optional
 
 from pydantic import BaseModel, field_validator
@@ -112,7 +113,7 @@ class ShortTermCashInvestmentsDBSchema(DTSBaseDBSchema):
 
 class AAIISentimentDBSchema(BaseModel):
     id: int
-    record_date: Optional[str] = None
+    record_date: Optional[datetime.datetime] = None
     bullish: Optional[float] = None
     neutral: Optional[float] = None
     bearish: Optional[float] = None

@@ -3,7 +3,7 @@
 import os
 
 from dotenv import load_dotenv
-from sqlalchemy import Column, Float, Integer, String, create_engine
+from sqlalchemy import Column, Float, Integer, String, create_engine, DateTime
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
@@ -248,6 +248,21 @@ class AAIISentiment(Base):
     s_and_p_weekly_high = Column(Float(), nullable=True)
     s_and_p_weekly_low = Column(Float(), nullable=True)
     s_and_p_weekly_close = Column(Float(), nullable=True)
+
+
+class SPYFinance(Base):
+    # pylint:disable=too-few-public-methods,invalid-name
+    """DTS Table 1."""
+    __tablename__ = "spy_finance"
+
+    id = Column(Integer, primary_key=True)
+    record_date = Column(DateTime(), nullable=True)
+    open = Column(Float(), nullable=True)
+    high = Column(Float(), nullable=True)
+    low = Column(Float(), nullable=True)
+    close = Column(Float(), nullable=True)
+    adj_close = Column(Float(), nullable=True)
+    volume = Column(Integer(), nullable=True)
 
 
 def init_db():
