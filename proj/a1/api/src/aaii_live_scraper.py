@@ -31,7 +31,7 @@ def scrape_live_data(last_record_date: datetime):
         record_date = datetime.strptime(report_date, "%b %d").replace(
             year=datetime.now().year
         )
-        record_item = AAISentiment(
+        record_item = AAIISentiment(
             record_date=str(record_date),
             bullish=bullish,
             neutral=neutral,
