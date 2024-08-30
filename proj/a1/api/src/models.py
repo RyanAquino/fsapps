@@ -278,7 +278,7 @@ def init_db():
         with open("/run/secrets/db_conn") as f:
             conn = f.readlines()[0]
 
-    engine = create_engine(conn, pool_recycle=3600, pool_pre_ping=True)
+    engine = create_engine(conn, pool_recycle=300, pool_pre_ping=True)
     # disable for prod, user has only select and insert privileges
     Base.metadata.create_all(engine)
 
