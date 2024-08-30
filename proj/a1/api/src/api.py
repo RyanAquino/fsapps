@@ -9,6 +9,7 @@ from pytz import timezone
 from sqlalchemy.orm import Session, sessionmaker
 
 from aaii_live_scraper import main as aaii_live_job_scraper
+from spy_finance_live_scraper import main as spy_finance_live_job_scraper
 from models import (
     Adjustment_Public_Debt_Transactions_Cash_Basis,
     Base,
@@ -188,14 +189,17 @@ def main(session: Session):
     """
     run_time = "16:01"
     time_zone = timezone("America/New_York")
-    jobs = [dts_scraper, aaii_live_job_scraper]
 
-    for item in jobs:
-        schedule.every().monday.at(run_time, time_zone).do(item, session)
-        schedule.every().tuesday.at(run_time, time_zone).do(item, session)
-        schedule.every().wednesday.at(run_time, time_zone).do(item, session)
-        schedule.every().thursday.at(run_time, time_zone).do(item, session)
-        schedule.every().friday.at(run_time, time_zone).do(item, session)
+    schedule.every().monday.at(run_time, time_zone).do(dts_scraper, session)
+    schedule.every().tuesday.at(run_time, time_zone).do(dts_scraper, session)
+    schedule.every().wednesday.at(run_time, time_zone).do(dts_scraper, session)
+    schedule.every().thursday.at(run_time, time_zone).do(dts_scraper, session)
+    schedule.every().friday.at(run_time, time_zone).do(dts_scraper, session)
+
+    daily_jobs = [aaii_live_job_scraper, spy_finance_live_job_scraper]
+
+    for job in daily_jobs:
+        schedule.every().day.at(run_time, time_zone).do(job, session)
 
     while True:
         next_run = schedule.idle_seconds()
