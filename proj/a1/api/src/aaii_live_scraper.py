@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+from urllib.request import urlopen
 
 import requests
 from bs4 import BeautifulSoup
@@ -20,8 +21,9 @@ def scrape_live_data(last_record_date: Optional[datetime] = None):
     google_cache_url = (
         f"https://webcache.googleusercontent.com/search?q=cache:{website_url}"
     )
-    resp = requests.get(google_cache_url)
-    html_source = resp.text
+    # resp = requests.get(google_cache_url)
+    # html_source = resp.text
+    html_source = urlopen(google_cache_url).read()
     soup = BeautifulSoup(html_source, "html.parser")
     records = soup.findAll("tr", {"align": "center"})[1:-1]
     record_data = []
