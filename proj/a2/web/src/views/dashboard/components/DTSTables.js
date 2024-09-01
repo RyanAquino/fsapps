@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { Select, MenuItem } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import DashboardCard from '../../../components/shared/DashboardCard';
 import Chart from 'react-apexcharts';
@@ -33,6 +32,7 @@ const DTSTables = () => {
     };
     fetchDashboardData().catch((err) => {
       if (err.response.status === 401) {
+        localStorage.removeItem('token');
         navigate(loginRoute);
       }
     });

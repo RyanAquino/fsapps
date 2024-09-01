@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -21,6 +21,13 @@ const AuthLogin = ({ title, subtitle, subtext }) => {
   const [password, setPassword] = useState();
   const [open, setOpen] = useState(false);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/dashboard');
+    }
+  }, []);
 
   const loginHandler = async (e) => {
     e.preventDefault();

@@ -10,6 +10,7 @@ import ProductPerformance from './components/ProductPerformance';
 import Blog from './components/Blog';
 import MonthlyEarnings from './components/MonthlyEarnings';
 import SentimentSurvey from './components/SentimentSurvey';
+import SPYFinance from './components/SPYFinance';
 
 const Dashboard = () => {
   return (
@@ -21,6 +22,9 @@ const Dashboard = () => {
           </Grid>
           <Grid item xs={12} lg={12}>
             <SentimentSurvey />
+          </Grid>
+          <Grid item xs={12} lg={12}>
+            <SPYFinance />
           </Grid>
           {/*<Grid item xs={12} lg={4}>*/}
           {/*  <Grid container spacing={3}>*/}

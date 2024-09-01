@@ -35,3 +35,14 @@ export const fetchSentimentSurvey = () => {
     })
     .then(({ data }) => data);
 };
+
+export const fetchSPYFinance = () => {
+  const headers = {
+    Authorization: `Bearer ${localStorage.getItem('token')}`,
+  };
+  return axios
+    .get(`${API_URL}/api/v1/spy-finance/`, {
+      headers: headers,
+    })
+    .then(({ data }) => data);
+};
