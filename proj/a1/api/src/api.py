@@ -199,7 +199,7 @@ def main(session: Session):
     daily_jobs = [aaii_live_job_scraper, spy_finance_live_job_scraper]
 
     for job in daily_jobs:
-        schedule.every().day.at(run_time, time_zone).do(job, session)
+        schedule.every(24).hours.do(job, session)
 
     while True:
         next_run = schedule.idle_seconds()

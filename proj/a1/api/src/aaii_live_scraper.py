@@ -33,7 +33,7 @@ def scrape_live_data(last_record_date: Optional[datetime] = None):
             year=datetime.now().year
         )
         record_item = AAIISentiment(
-            record_date=str(record_date),
+            record_date=record_date,
             bullish=bullish,
             neutral=neutral,
             bearish=bearish,
