@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 import requests
 from loguru import logger
@@ -19,7 +19,7 @@ def scrape_live_data(last_record_dt: datetime):
         last_record_dt = datetime(1993, 1, 1, 0, 0, tzinfo=timezone.utc)
 
     current_date = (
-        datetime.now(timezone.utc)
+        (datetime.now(timezone.utc) + timedelta(days=1))
         .replace(hour=0, minute=0, second=0, microsecond=0)
         .timestamp()
     )
