@@ -86,7 +86,7 @@ const DTSTables = () => {
       },
     },
     xaxis: {
-      categories: tableData.map((i) => i['date']),
+      categories: tableData.map((i) => `${i['date']} UTC`),
       type: 'datetime',
       title: {
         text: 'Day',

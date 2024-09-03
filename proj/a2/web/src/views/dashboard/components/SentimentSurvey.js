@@ -47,7 +47,7 @@ const SentimentSurvey = () => {
       },
     },
     xaxis: {
-      categories: tableData.map((i) => i['record_date']),
+      categories: tableData.map((i) => `${new Date(i["record_date"]).toDateString()} UTC`),
       type: 'datetime',
       title: {
         text: 'Day',
@@ -73,7 +73,7 @@ const SentimentSurvey = () => {
   const seriescolumnchart = [
     {
       name: 'Bullish',
-      data: tableData.map((i) => (`${i['bullish']}%` ? i['bullish'] : 0)),
+      data: tableData.map((i) => (i['bullish'] ? i['bullish'] : 0)),
     },
     {
       name: 'Neutral',

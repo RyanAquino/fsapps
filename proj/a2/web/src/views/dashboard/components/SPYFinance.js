@@ -19,7 +19,7 @@ const SPYFinance = () => {
 
       for (const item of spyFinanceData.splice(-365)) {
         formattedData.push({
-          x: item['record_date'],
+          x: `${new Date(item["record_date"]).toDateString()} UTC`,
           y: [item['open'], item['high'], item['low'], item['close']],
         });
       }
