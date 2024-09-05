@@ -15,5 +15,5 @@ class SPYFinanceRepository:
 
     def get_all(self):
         with self.session_factory() as session:
-            q = session.query(SPYFinance)
+            q = session.query(SPYFinance).order_by(SPYFinance.record_date.asc())
             return q.all()

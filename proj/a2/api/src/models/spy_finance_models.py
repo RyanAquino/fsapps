@@ -9,7 +9,7 @@ class SPYFinance(Base):
     __tablename__ = "spy_finance"
 
     id = Column(Integer, primary_key=True)
-    record_date = Column(DateTime(), nullable=True)
+    record_date = Column(DateTime(), nullable=True, index=True)
     open = Column(Float(), nullable=True)
     high = Column(Float(), nullable=True)
     low = Column(Float(), nullable=True)
