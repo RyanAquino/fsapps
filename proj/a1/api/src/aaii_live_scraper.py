@@ -23,7 +23,12 @@ def scrape_live_data(last_record_date: Optional[datetime] = None):
     )
     # resp = requests.get(google_cache_url)
     # html_source = resp.text
-    html_source = urlopen(google_cache_url).read()
+    try:
+        html_source = urlopen(google_cache_url).read()
+    except OSError:
+        logger.warning("Exception raised when sending HTTP requests")
+        return []
+
     soup = BeautifulSoup(html_source, "html.parser")
     records = soup.findAll("tr", {"align": "center"})[1:-1]
     record_data = []

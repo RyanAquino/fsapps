@@ -1,9 +1,11 @@
 """DTS Script main module."""
 
 import time
+from typing import Optional, Callable
 
 import requests
 import schedule
+import sqlalchemy.orm.session
 from loguru import logger
 from pytz import timezone
 from sqlalchemy.orm import Session, sessionmaker
@@ -42,9 +44,13 @@ def get_data_per_date(table: str, date: str, date_orig=None, results=None):
     endpoint = f"v1/accounting/dts/{table}"
     param = f"filter=record_date:{date}"
     logger.info(f"Sending request: {base_url}/{endpoint}?{param}")
-    response = requests.get(f"{base_url}/{endpoint}?{param}", timeout=60).json()
 
-    results += response.get("data")
+    try:
+        response = requests.get(f"{base_url}/{endpoint}?{param}").json()
+        results += response.get("data")
+    except requests.exceptions.RequestException:
+        logger.warning("Exception raised when sending HTTP requests")
+        return results
 
     if response.get("meta").get("count") > 1 and (
         nxt := response.get("links").get("next")
@@ -108,7 +114,7 @@ def get_last_record_date(table: Base, session: Session) -> str:
     return last_inserted.record_date if last_inserted else None
 
 
-def get_first_record_date(table: str) -> str:
+def get_first_record_date(table: str) -> Optional[str]:
     """
     Retrieve latest record per table via API.
 
@@ -121,7 +127,12 @@ def get_first_record_date(table: str) -> str:
         "sort=-record_date&page%5Bsize%5D=1"
     )
 
-    result = requests.get(api, timeout=60).json()["data"]
+    try:
+        result = requests.get(api).json()["data"]
+    except requests.exceptions.RequestException:
+        logger.warning("Exception raised when sending HTTP requests")
+        return None
+
     return result[0]["record_date"] if len(result) == 1 else None
 
 
@@ -148,6 +159,11 @@ def dts_scraper(session: Session):
         table_name = table_obj.__name__
         table_lowered = table_name.lower()
         record_date = get_first_record_date(table_lowered)
+
+        if not record_date:
+            logger.warning(f"Temporary skipping {table_lowered}: API not available")
+            continue
+
         exists = check_date_exists(table_obj, record_date, session)
         # table_v_exists = table_lowered == "b001b_dts_table_6" and check_date_exists(
         #     DTS_Table_5, record_date, session
@@ -180,26 +196,38 @@ def dts_scraper(session: Session):
         insert(data_objs, session)
 
 
-def main(session: Session):
+def job_wrapper(job: Callable, session: sqlalchemy.orm.session.sessionmaker):
+    """
+    Wraps job with dependencies needed to instantiate every call.
+
+    :param job: job func
+    :param session: DB session maker
+    :return: None
+    """
+    with session() as db_session:
+        job(db_session)
+
+
+def main(database_engine):
     """
     Main function that schedules the job every week days at 4:01 PM
     using New York time zone.
-    :param session: Session object
     :return: None
     """
-    run_time = "16:01"
-    time_zone = timezone("America/New_York")
+    # run_time = "16:01"
+    # time_zone = timezone("America/New_York")
 
-    schedule.every().monday.at(run_time, time_zone).do(dts_scraper, session)
-    schedule.every().tuesday.at(run_time, time_zone).do(dts_scraper, session)
-    schedule.every().wednesday.at(run_time, time_zone).do(dts_scraper, session)
-    schedule.every().thursday.at(run_time, time_zone).do(dts_scraper, session)
-    schedule.every().friday.at(run_time, time_zone).do(dts_scraper, session)
+    # schedule.every().monday.at(run_time, time_zone).do(dts_scraper, session)
+    # schedule.every().tuesday.at(run_time, time_zone).do(dts_scraper, session)
+    # schedule.every().wednesday.at(run_time, time_zone).do(dts_scraper, session)
+    # schedule.every().thursday.at(run_time, time_zone).do(dts_scraper, session)
+    # schedule.every().friday.at(run_time, time_zone).do(dts_scraper, session)
 
-    daily_jobs = [aaii_live_job_scraper, spy_finance_live_job_scraper]
+    Session = sessionmaker(bind=database_engine)
+    daily_jobs = [aaii_live_job_scraper, spy_finance_live_job_scraper, dts_scraper]
 
     for job in daily_jobs:
-        schedule.every(24).hours.do(job, session)
+        schedule.every(4).hours.do(job_wrapper, job, Session)
 
     while True:
         next_run = schedule.idle_seconds()
@@ -215,6 +243,4 @@ def main(session: Session):
 
 if __name__ == "__main__":
     db_engine = init_db()
-    Session = sessionmaker(bind=db_engine)
-    with Session() as db_session:
-        main(db_session)
+    main(db_engine)

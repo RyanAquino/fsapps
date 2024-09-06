@@ -31,12 +31,18 @@ def scrape_live_data(last_record_dt: datetime):
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) "
         "Chrome/127.0.0.0 Safari/537.36"
     }
-    response = requests.get(
-        "https://finance.yahoo.com/quote/SPY/history/",
-        params=query_params,
-        headers=headers,
-    )
-    html_source = response.text
+
+    try:
+        response = requests.get(
+            "https://finance.yahoo.com/quote/SPY/history/",
+            params=query_params,
+            headers=headers,
+        )
+        html_source = response.text
+    except requests.exceptions.RequestException:
+        logger.warning("Exception raised when sending HTTP requests")
+        return []
+
     soup = BeautifulSoup(html_source, "html.parser")
 
     table_data = soup.find("div", {"data-testid": "history-table"})
