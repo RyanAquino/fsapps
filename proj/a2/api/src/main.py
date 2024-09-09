@@ -1,5 +1,6 @@
 import uvicorn
 from fastapi import FastAPI
+from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.src.container import Application
@@ -22,6 +23,8 @@ def create_app():
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    min_response_byte_size = 1000000
+    fast_app.add_middleware(GZipMiddleware, minimum_size=min_response_byte_size, compresslevel=5)
 
     return fast_app
 

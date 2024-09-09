@@ -13,4 +13,4 @@ requests==2.31.0
 dependency-injector==4.42.0b1
 dependency-injector[yaml]
 pandas==2.2.2
-python-multipart
+python-multipart==0.0.9

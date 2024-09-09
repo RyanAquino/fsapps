@@ -9,7 +9,7 @@ class AAIISentiment(Base):
     __tablename__ = "aaii_sentiment"
 
     id = Column(Integer, primary_key=True)
-    record_date = Column(DateTime(), nullable=True)
+    record_date = Column(DateTime(), nullable=True, index=True)
     bullish = Column(Float(), nullable=True)
     neutral = Column(Float(), nullable=True)
     bearish = Column(Float(), nullable=True)

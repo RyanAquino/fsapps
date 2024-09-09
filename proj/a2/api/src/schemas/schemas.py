@@ -132,6 +132,8 @@ class AAIISentimentDBSchema(BaseModel):
 
     @field_validator("bullish", "neutral", "bearish", "total")
     def round_values(cls, v):
+        if not v:
+            return 0.0
         return round(v, 2)
 
 
