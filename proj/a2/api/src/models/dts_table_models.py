@@ -33,7 +33,7 @@ class Deposits_Withdrawals_Operating_Cash(Base):
     __tablename__ = "deposits_withdrawals_operating_cash"
 
     id = Column(Integer, primary_key=True)
-    record_date = Column(String(200), nullable=True)
+    record_date = Column(String(200), nullable=True, index=True)
     account_type = Column(String(200), nullable=True)
     transaction_type = Column(String(200), nullable=True)
     transaction_catg = Column(String(200), nullable=True)

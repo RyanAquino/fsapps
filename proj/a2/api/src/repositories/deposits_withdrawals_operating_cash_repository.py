@@ -11,7 +11,7 @@ class DepositsWithdrawalsOperatingCashBalanceRepository(DTSTablesBaseRepository)
             columns = [
                 getattr(Deposits_Withdrawals_Operating_Cash, field) for field in fields
             ]
-            q = session.query(*columns)
+            q = session.query(*columns).order_by(Deposits_Withdrawals_Operating_Cash.record_date.desc())
             return q.all()
 
     def generate_filter(self):
