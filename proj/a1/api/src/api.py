@@ -214,17 +214,13 @@ def main(database_engine):
     using New York time zone.
     :return: None
     """
-    # run_time = "16:01"
-    # time_zone = timezone("America/New_York")
-
-    # schedule.every().monday.at(run_time, time_zone).do(dts_scraper, session)
-    # schedule.every().tuesday.at(run_time, time_zone).do(dts_scraper, session)
-    # schedule.every().wednesday.at(run_time, time_zone).do(dts_scraper, session)
-    # schedule.every().thursday.at(run_time, time_zone).do(dts_scraper, session)
-    # schedule.every().friday.at(run_time, time_zone).do(dts_scraper, session)
+    run_time = "16:01"
+    time_zone = timezone("America/New_York")
 
     Session = sessionmaker(bind=database_engine)
-    daily_jobs = [aaii_live_job_scraper, spy_finance_live_job_scraper, dts_scraper]
+    daily_jobs = [aaii_live_job_scraper, spy_finance_live_job_scraper]
+
+    schedule.every().day.at(run_time, time_zone).do(dts_scraper, Session)
 
     for job in daily_jobs:
         schedule.every(4).hours.do(job_wrapper, job, Session)
