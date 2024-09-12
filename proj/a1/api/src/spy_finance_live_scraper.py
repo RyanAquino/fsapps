@@ -46,7 +46,12 @@ def scrape_live_data(last_record_dt: datetime):
     soup = BeautifulSoup(html_source, "html.parser")
 
     table_data = soup.find("div", {"data-testid": "history-table"})
-    table_data = table_data.find("div", class_="table-container").table.tbody
+
+    if not table_data:
+        return []
+
+    table_data = table_data.find("div", class_="table-container")
+    table_data = table_data.table.tbody
     results = []
 
     for td in table_data.findAll("tr"):

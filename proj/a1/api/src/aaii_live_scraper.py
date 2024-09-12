@@ -1,3 +1,4 @@
+import http.client
 from datetime import datetime
 from typing import Optional
 from urllib.request import urlopen
@@ -25,7 +26,7 @@ def scrape_live_data(last_record_date: Optional[datetime] = None):
     # html_source = resp.text
     try:
         html_source = urlopen(google_cache_url).read()
-    except OSError:
+    except (OSError, http.client.HTTPException):
         logger.warning("Exception raised when sending HTTP requests")
         return []
 
