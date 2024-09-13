@@ -220,7 +220,7 @@ def main(database_engine):
     Session = sessionmaker(bind=database_engine)
     daily_jobs = [aaii_live_job_scraper, spy_finance_live_job_scraper]
 
-    schedule.every().day.at(run_time, time_zone).do(dts_scraper, Session)
+    schedule.every().day.at(run_time, time_zone).do(job_wrapper, dts_scraper, Session)
 
     for job in daily_jobs:
         schedule.every(4).hours.do(job_wrapper, job, Session)
