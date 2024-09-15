@@ -147,7 +147,7 @@ def main():
     """
     db_engine = init_db()
     Session = sessionmaker(bind=db_engine)
-    schedule.every(30).seconds.do(job_wrapper, scrape_live_data, Session)
+    schedule.every(5).minutes.do(job_wrapper, scrape_live_data, Session)
 
     while True:
         next_run = schedule.idle_seconds()
