@@ -11,6 +11,12 @@ from sqlalchemy.orm import sessionmaker
 
 
 def send_api_request(ts: int = None):
+    """
+    Send API requests to yahoo finance v6 API.
+
+    :param ts: timestamp
+    :return:  response done or None
+    """
     params = {"formatted": True, "straddle": False, "en": "US", "region": "US"}
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36",
@@ -34,17 +40,23 @@ def send_api_request(ts: int = None):
 
 def scrape_live_data(session):
     """
-    Scrape live data of yahoo finance (SPY)
-
-    :return: records to be saved if any
+    Scrape live data of yahoo finance (SPY) SPX options
     """
     logger.info("Scraping Yahoo finance (SPY) Options")
     response = send_api_request()
+
+    if not response:
+        return
+
     opts = response.get("expirationDates")
 
     for opt in opts:
         raw_dt = datetime.fromtimestamp(opt, timezone.utc).date()
         response = send_api_request(opt)
+
+        if not response:
+            continue
+
         idx_opt = response.get("options")[0]
         results = []
 
@@ -131,9 +143,7 @@ def job_wrapper(job: Callable, session: sqlalchemy.orm.session.sessionmaker):
 
 def main():
     """
-    Main function that schedules the job every week days at 4:01 PM
-    using New York time zone.
-    :return: None
+    Main function
     """
     db_engine = init_db()
     Session = sessionmaker(bind=db_engine)
