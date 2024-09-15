@@ -3,7 +3,7 @@
 import os
 
 from dotenv import load_dotenv
-from sqlalchemy import Column, Float, Integer, String, create_engine, DateTime
+from sqlalchemy import Column, Float, Integer, String, create_engine, DateTime, Boolean
 from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
@@ -263,6 +263,27 @@ class SPYFinance(Base):
     close = Column(Float(), nullable=True)
     adj_close = Column(Float(), nullable=True)
     volume = Column(Integer(), nullable=True)
+
+
+class SPYFinanceOptions(Base):
+    # pylint:disable=too-few-public-methods,invalid-name
+    """SPY Finance options."""
+    __tablename__ = "spy_finance_opts"
+
+    id = Column(Integer, primary_key=True)
+    contract_name = Column(String(length=200), nullable=True)
+    last_trade_date = Column(DateTime(), nullable=True)
+    strike = Column(Integer(), nullable=True)
+    last_price = Column(Float(), nullable=True)
+    bid = Column(Float(), nullable=True)
+    ask = Column(Float(), nullable=True)
+    change = Column(Float(), nullable=True)
+    change_percent = Column(Float(), nullable=True)
+    volume = Column(Integer(), nullable=True)
+    open_interest = Column(Integer(), nullable=True)
+    implied_volatility = Column(Float(), nullable=True)
+    calls = Column(Boolean(), default=False)
+    in_the_money = Column(Boolean(), default=False)
 
 
 def init_db():
