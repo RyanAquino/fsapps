@@ -78,11 +78,11 @@ def scrape_live_data(session):
                         item.get("lastTradeDate").get("raw"), timezone.utc
                     ),
                     strike=item.get("strike").get("raw"),
-                    last_price=item.get("lastPrice").get("raw"),
+                    last_price=item.get("lastPrice", {}).get("raw"),
                     bid=item.get("bid").get("raw"),
                     ask=item.get("ask").get("raw"),
                     change=item.get("change").get("raw"),
-                    change_percent=item.get("percentChange").get("raw"),
+                    change_percent=item.get("percentChange", {}).get("raw"),
                     volume=item.get("volume", {}).get("raw", 0),
                     open_interest=item.get("openInterest").get("raw"),
                     implied_volatility=item.get("impliedVolatility").get("raw"),
