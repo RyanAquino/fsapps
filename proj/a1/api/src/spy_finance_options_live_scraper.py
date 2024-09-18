@@ -60,7 +60,7 @@ def scrape_live_data(session):
         idx_opt = response.get("options")[0]
         results = []
 
-        for item in idx_opt.get("calls"):
+        for item in idx_opt.get("calls", []):
             contract_name = item.get("contractSymbol")
 
             if (
@@ -91,7 +91,7 @@ def scrape_live_data(session):
                 )
             )
 
-        for item in idx_opt.get("puts"):
+        for item in idx_opt.get("puts", []):
             contract_name = item.get("contractSymbol")
             if (
                 session.query(SPYFinanceOptions)

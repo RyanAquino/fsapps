@@ -27,6 +27,18 @@ from models import (
 )
 
 
+def retry_requests(url, retries=0):
+    if retries > 10:
+        return None
+    try:
+        logger.info(f"Sending request: {url}")
+        response = requests.get(url)
+        return response.json()
+    except requests.exceptions.RequestException:
+        logger.warning(f"Error on HTTP requests: {url} - retrying {retries}")
+        retry_requests(retries+1, url)
+
+
 def get_data_per_date(table: str, date: str, date_orig=None, results=None):
     """
     Recursively retrieve data per date and table on DTS API.
@@ -43,14 +55,13 @@ def get_data_per_date(table: str, date: str, date_orig=None, results=None):
     base_url = "https://api.fiscaldata.treasury.gov/services/api/fiscal_service"
     endpoint = f"v1/accounting/dts/{table}"
     param = f"filter=record_date:{date}"
-    logger.info(f"Sending request: {base_url}/{endpoint}?{param}")
+    response = retry_requests(f"{base_url}/{endpoint}?{param}", 3)
 
-    try:
-        response = requests.get(f"{base_url}/{endpoint}?{param}").json()
-        results += response.get("data")
-    except requests.exceptions.RequestException:
-        logger.warning("Exception raised when sending HTTP requests")
+    if not response:
+        logger.error("Retries exceeded")
         return results
+
+    results += response.get("data")
 
     if response.get("meta").get("count") > 1 and (
         nxt := response.get("links").get("next")
@@ -121,18 +132,18 @@ def get_first_record_date(table: str) -> Optional[str]:
     :param table: table name
     :return: date string or None
     """
-    api = (
+    api_url = (
         "https://api.fiscaldata.treasury.gov/services/"
         f"api/fiscal_service/v1/accounting/dts/{table}?"
         "sort=-record_date&page%5Bsize%5D=1"
     )
+    response = retry_requests(api_url)
 
-    try:
-        result = requests.get(api).json()["data"]
-    except requests.exceptions.RequestException:
-        logger.warning("Exception raised when sending HTTP requests")
+    if not response:
+        logger.error("Retries Exceeded")
         return None
 
+    result = response.get("data")
     return result[0]["record_date"] if len(result) == 1 else None
 
 
@@ -221,6 +232,7 @@ def main(database_engine):
     daily_jobs = [aaii_live_job_scraper, spy_finance_live_job_scraper]
 
     schedule.every().day.at(run_time, time_zone).do(job_wrapper, dts_scraper, Session)
+    schedule.every().hour.at(":20").do(job_wrapper, dts_scraper, Session)
 
     for job in daily_jobs:
         schedule.every(4).hours.do(job_wrapper, job, Session)
