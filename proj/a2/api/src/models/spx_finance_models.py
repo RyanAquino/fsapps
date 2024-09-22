@@ -6,7 +6,7 @@ from api.src.database import Base
 class SPXFinanceOptions(Base):
     # pylint:disable=too-few-public-methods,invalid-name
     """SPY Finance options."""
-    __tablename__ = "spy_finance_opts"
+    __tablename__ = "spx_finance_opts"
 
     id = Column(Integer, primary_key=True)
     contract_name = Column(String(length=200), nullable=True)

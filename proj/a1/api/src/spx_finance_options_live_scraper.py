@@ -6,7 +6,7 @@ import requests
 import schedule
 import sqlalchemy
 from loguru import logger
-from models import SPYFinanceOptions, init_db
+from models import SPXFinanceOptions, init_db
 from sqlalchemy.orm import sessionmaker
 
 
@@ -40,9 +40,9 @@ def send_api_request(ts: int = None):
 
 def scrape_live_data(session):
     """
-    Scrape live data of yahoo finance (SPY) SPX options
+    Scrape live data of yahoo finance SPX options
     """
-    logger.info("Scraping Yahoo finance (SPY) Options")
+    logger.info("Scraping Yahoo finance (SPX) Options")
     response = send_api_request()
 
     if not response:
@@ -64,15 +64,15 @@ def scrape_live_data(session):
             contract_name = item.get("contractSymbol")
 
             if (
-                session.query(SPYFinanceOptions)
-                .filter(SPYFinanceOptions.contract_name == contract_name)
+                session.query(SPXFinanceOptions)
+                .filter(SPXFinanceOptions.contract_name == contract_name)
                 .count()
                 != 0
             ):
                 continue
 
             results.append(
-                SPYFinanceOptions(
+                SPXFinanceOptions(
                     contract_name=contract_name,
                     last_trade_date=datetime.fromtimestamp(
                         item.get("lastTradeDate").get("raw"), timezone.utc
@@ -94,15 +94,15 @@ def scrape_live_data(session):
         for item in idx_opt.get("puts", []):
             contract_name = item.get("contractSymbol")
             if (
-                session.query(SPYFinanceOptions)
-                .filter(SPYFinanceOptions.contract_name == contract_name)
+                session.query(SPXFinanceOptions)
+                .filter(SPXFinanceOptions.contract_name == contract_name)
                 .count()
                 != 0
             ):
                 continue
 
             results.append(
-                SPYFinanceOptions(
+                SPXFinanceOptions(
                     contract_name=contract_name,
                     last_trade_date=datetime.fromtimestamp(
                         item.get("lastTradeDate").get("raw"), timezone.utc
@@ -124,7 +124,7 @@ def scrape_live_data(session):
         if results:
             session.bulk_save_objects(results)
             session.commit()
-            logger.success("Done saving new records for Yahoo finance (SPY) Options")
+            logger.success("Done saving new records for Yahoo finance (SPX) Options")
         else:
             logger.info(f"No records to be save - {raw_dt}")
 
