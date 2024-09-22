@@ -1,7 +1,7 @@
 import uvicorn
 from fastapi import FastAPI
-from fastapi.middleware.gzip import GZipMiddleware
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 
 from api.src.container import Application
 from router import api_router
@@ -24,7 +24,9 @@ def create_app():
         allow_headers=["*"],
     )
     min_response_byte_size = 1000000
-    fast_app.add_middleware(GZipMiddleware, minimum_size=min_response_byte_size, compresslevel=5)
+    fast_app.add_middleware(
+        GZipMiddleware, minimum_size=min_response_byte_size, compresslevel=5
+    )
 
     return fast_app
 
@@ -40,6 +42,6 @@ if __name__ == "__main__":
         host=app_config.host(),
         port=app_config.port(),
         reload=app_config.debug(),
-        ssl_certfile=app_config.ssl_cert(),
-        ssl_keyfile=app_config.ssl_key(),
+        # ssl_certfile=app_config.ssl_cert(),
+        # ssl_keyfile=app_config.ssl_key(),
     )

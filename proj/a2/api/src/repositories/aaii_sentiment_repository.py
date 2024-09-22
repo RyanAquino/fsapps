@@ -19,7 +19,11 @@ class AAIISentimentRepository:
         last_years = datetime.datetime.now() - datetime.timedelta(days=1095)
         with self.session_factory() as session:
             columns = [getattr(AAIISentiment, field) for field in fields]
-            q = session.query(*columns).filter(AAIISentiment.record_date >= last_years).order_by(AAIISentiment.record_date.desc())
+            q = (
+                session.query(*columns)
+                .filter(AAIISentiment.record_date >= last_years)
+                .order_by(AAIISentiment.record_date.desc())
+            )
             return q.all()
 
     @staticmethod

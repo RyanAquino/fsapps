@@ -8,4 +8,4 @@ application:
   ssl_cert: "./api/src/certs/cert.pem"
   ssl_key: "./api/src/certs/key.pem"
 database:
-  dsn: "mariadb+mariadbconnector://user:password@db:3306/mydatabase"
+  dsn: "mariadb+mariadbconnector://user:password@127.0.0.1:3306/mydatabase"

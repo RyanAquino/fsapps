@@ -149,3 +149,23 @@ class SPYFinanceDBSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class SPXFinanceOptionsDBSchema(BaseModel):
+    id: int
+    contract_name: Optional[str] = None
+    last_trade_date: Optional[datetime.datetime] = None
+    strike: Optional[int] = None
+    last_price: Optional[float] = None
+    bid: Optional[float] = None
+    ask: Optional[float] = None
+    change: Optional[float] = None
+    change_percent: Optional[float] = None
+    volume: Optional[int] = None
+    open_interest: Optional[int] = None
+    implied_volatility: Optional[float] = None
+    calls: Optional[bool] = None
+    in_the_money: Optional[bool] = None
+
+    class Config:
+        from_attributes = True
