@@ -42,10 +42,10 @@ services:
     depends_on:
       - db
 
-  scraper-spy-opts:
+  scraper-spx-opts:
     build:
       context: ../a1/api/
-      dockerfile: Dockerfile.spy_opt
+      dockerfile: Dockerfile.spx_opt
     environment:
       conn: 'mariadb+pymysql://user:password@db:3306/mydatabase'
     depends_on:

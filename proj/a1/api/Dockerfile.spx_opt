@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir --upgrade -r /a1/requirements.txt
 
 COPY . /a1/
 
-CMD ["python", "src/spy_finance_options_live_scraper.py"]
+CMD ["python", "src/spx_finance_options_live_scraper.py"]
