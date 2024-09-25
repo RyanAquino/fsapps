@@ -112,7 +112,7 @@ def scrape_live_data(session):
                     bid=item.get("bid", {}).get("raw"),
                     ask=item.get("ask").get("raw"),
                     change=item.get("change").get("raw"),
-                    change_percent=item.get("percentChange").get("raw"),
+                    change_percent=item.get("percentChange", {}).get("raw"),
                     volume=item.get("volume", {}).get("raw", 0),
                     open_interest=item.get("openInterest", {}).get("raw", 0),
                     implied_volatility=item.get("impliedVolatility").get("raw"),
