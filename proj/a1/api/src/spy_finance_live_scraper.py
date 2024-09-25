@@ -56,6 +56,11 @@ def scrape_live_data(last_record_dt: datetime):
 
     for td in table_data.findAll("tr"):
         dt, *vals = [item.text.strip(" ") for item in td if item and item != " "]
+
+        if len(vals) == 1:
+            logger.warning(f"Skipping: {dt}")
+            continue
+
         open_price, high, low, close, adj_close, volume = [
             float(v.replace(",", "")) for v in vals
         ]
